@@ -1,3 +1,11 @@
+package controller;
+
+import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
+import com.mxgraph.layout.mxIGraphLayout;
+import com.mxgraph.util.mxCellRenderer;
+
+import org.jgrapht.ext.JGraphXAdapter;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +19,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import model.DependencyObj;
 
 public class ControllerFunctions {
     private static Stage onCreatedStage;

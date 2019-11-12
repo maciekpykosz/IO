@@ -1,3 +1,5 @@
+package controller;
+
 import org.gummie_bears.io_project.model.DependencyFinder;
 import org.gummie_bears.io_project.model.DependencyObj;
 import org.gummie_bears.io_project.model.EdgeSettings;
