@@ -1,3 +1,6 @@
+import java.net.URL;
+
+import controller.Controller;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,9 +11,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("view/sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        FXMLLoader loader = new FXMLLoader(new URL("file:///"+ System.getProperty("user.dir").toString() + "/src/main/java/view/sample.fxml"));
+        Parent root = loader.load();
+        ((Controller)loader.getController()).setStage(primaryStage);
+        primaryStage.setTitle("Graph Display");
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 
