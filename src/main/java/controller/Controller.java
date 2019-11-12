@@ -1,9 +1,5 @@
 package controller;
 
-import org.gummie_bears.io_project.model.DependencyFinder;
-import org.gummie_bears.io_project.model.DependencyObj;
-import org.gummie_bears.io_project.model.EdgeSettings;
-import org.gummie_bears.io_project.model.GraphDraw;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 
 import java.io.File;
@@ -19,6 +15,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import model.DependencyFinder;
+import model.DependencyObj;
+import model.EdgeSettings;
+import model.GraphDraw;
 
 public class Controller  {
     @FXML

@@ -5,6 +5,7 @@ import com.mxgraph.layout.mxIGraphLayout;
 import com.mxgraph.util.mxCellRenderer;
 
 import org.jgrapht.ext.JGraphXAdapter;
+import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -20,6 +21,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.DependencyObj;
+import model.EdgeSettings;
 
 public class ControllerFunctions {
     private static Stage onCreatedStage;
