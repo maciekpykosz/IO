@@ -19,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import model.DependencyObj;
 import model.EdgeSettings;
@@ -83,5 +84,12 @@ public class ControllerFunctions {
         info.setHeaderText("Information about this program");
         info.setContentText("Dependency analyser made by \"Gumisie\"");
         info.showAndWait();
+    }
+    public static void setDefaultDirector(DirectoryChooser directoryChooser){
+        File defaultDirectory = new File(System.getProperty("user.dir") + "/..");
+        if (! defaultDirectory.exists()) {
+            defaultDirectory.mkdirs();
+        }
+        directoryChooser.setInitialDirectory(defaultDirectory);
     }
 }

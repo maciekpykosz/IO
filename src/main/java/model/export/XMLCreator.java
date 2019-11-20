@@ -40,10 +40,10 @@ public class XMLCreator {
         return properties;
     }
 
-    private List<Generalization> getGeneralizations(List<DependencyObj> dependencies){
+    private List<Generalization> getGeneralizations(List<DependencyObj> dependencies) {
         List<Generalization> generalizations = new ArrayList<>();
         for (DependencyObj fromDependency : dependencies) {
-            for(Map.Entry<DependencyObj, Integer> entry : fromDependency.getDependencyList().entrySet()){
+            for (Map.Entry<DependencyObj, Integer> entry : fromDependency.getDependencyList().entrySet()) {
                 DependencyObj toDependency = entry.getKey();
                 Generalization generalization = new Generalization(fromDependency.getId(), toDependency.getId());
                 generalizations.add(generalization);
@@ -52,12 +52,12 @@ public class XMLCreator {
         return generalizations;
     }
 
-    public void addClassesWithDependencies(List<DependencyObj> dependencies){
+    public void addClassesWithDependencies(List<DependencyObj> dependencies) {
         for (DependencyObj dependencyObj : dependencies) {
             builder.e("Class")
                     .a("Id", dependencyObj.getId().toString())
                     .a("Name", dependencyObj.getName())
-                        .up();
+                    .up();
         }
 
         List<Generalization> generalizations = getGeneralizations(dependencies);
