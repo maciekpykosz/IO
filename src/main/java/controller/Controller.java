@@ -1,9 +1,15 @@
 package controller;
 
+import com.jamesmurty.utils.XMLBuilder2;
+import model.export.XMLCreator;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.List;
+import java.util.Properties;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -100,7 +106,17 @@ public class Controller  {
     }
 
     public void exportToXML(ActionEvent actionEvent){
-        //create XML and save it to file
+        XMLCreator creator = new XMLCreator();
+        List<DependencyObj> lastCreated = dependencyFinder.getLastCreatedDependencies();
+        //creator.addClasses(lastCreated);
+        try {
+            XMLBuilder2 builder = creator.getBuilder();
+            PrintWriter writer = new PrintWriter(new FileOutputStream(System.getProperty("user.dir").toString() + "/src/main/resources/project.xml"));
+            Properties properties = creator.getProperties();
+            builder.toWriter(writer, properties);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public void closeApp(ActionEvent actionEvent) {

@@ -6,15 +6,29 @@ import java.util.Map;
 import java.util.Objects;
 
 public class DependencyObj {
+    private static Integer ids = 1;
+    private Integer id;
     private String name;
     private Integer weight = 0;  // Current object weight
     private HashMap<DependencyObj, Integer> dependencyList = new HashMap<>(); // dependencyObject with edge weight
 
     public DependencyObj() {
+        id = ids;
+        ids++;
     }
 
     public DependencyObj(String name) {
         this.name = name;
+        id = ids;
+        ids++;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public static Integer getIds() {
+        return ids;
     }
 
     public String getName() {
@@ -60,7 +74,7 @@ public class DependencyObj {
 
     @Override
     public String toString() {
-        return this.name + "\n" + this.weight;
+        return this.name + "n" + this.weight;
     }
 
     @Override //containsKey basing on this method, so i need to compare 2 obj based on name
