@@ -3,7 +3,6 @@ package model.export;
 import com.jamesmurty.utils.XMLBuilder2;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -39,5 +38,36 @@ public class XMLCreator {
 
     public Properties getProperties() {
         return properties;
+    }
+
+    private List<Generalization> getGeneralizations(List<DependencyObj> dependencies){
+        List<Generalization> generalizations = new ArrayList<>();
+        for (DependencyObj fromDependency : dependencies) {
+            for(Map.Entry<DependencyObj, Integer> entry : fromDependency.getDependencyList().entrySet()){
+                DependencyObj toDependency = entry.getKey();
+                Generalization generalization = new Generalization(fromDependency.getId(), toDependency.getId());
+                generalizations.add(generalization);
+            }
+        }
+        return generalizations;
+    }
+
+    public void addClassesWithDependencies(List<DependencyObj> dependencies){
+        for (DependencyObj dependencyObj : dependencies) {
+            builder.e("Class")
+                    .a("Id", dependencyObj.getId().toString())
+                    .a("Name", dependencyObj.getName())
+                        .up();
+        }
+
+        List<Generalization> generalizations = getGeneralizations(dependencies);
+        for (Generalization generalization : generalizations) {
+            builder.e("Usage")
+                    .a("Id", elementsId.toString())
+                    .a("From", generalization.getFrom().toString())
+                    .a("To", generalization.getTo().toString())
+                    .up();
+            elementsId++;
+        }
     }
 }

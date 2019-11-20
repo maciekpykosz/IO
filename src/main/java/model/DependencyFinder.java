@@ -127,6 +127,7 @@ public class DependencyFinder {
                 }
             }
         }
+        lastCreatedDependencies = dependenciesList;
         return dependenciesList;
     }
 
@@ -256,6 +257,7 @@ public class DependencyFinder {
                 }
             }
         }
+        lastCreatedDependencies = moduleDependencies;
         return moduleDependencies;
     }
 }

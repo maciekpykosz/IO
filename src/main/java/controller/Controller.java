@@ -10,7 +10,6 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Properties;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,6 +24,7 @@ import model.DependencyFinder;
 import model.DependencyObj;
 import model.EdgeSettings;
 import model.GraphDraw;
+import model.export.XMLCreator;
 
 public class Controller  {
     @FXML
@@ -108,7 +108,7 @@ public class Controller  {
     public void exportToXML(ActionEvent actionEvent){
         XMLCreator creator = new XMLCreator();
         List<DependencyObj> lastCreated = dependencyFinder.getLastCreatedDependencies();
-        //creator.addClasses(lastCreated);
+        creator.addClassesWithDependencies(lastCreated);
         try {
             XMLBuilder2 builder = creator.getBuilder();
             PrintWriter writer = new PrintWriter(new FileOutputStream(System.getProperty("user.dir").toString() + "/src/main/resources/project.xml"));
