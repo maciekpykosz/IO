@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<GridPane prefHeight="364.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
+<GridPane prefHeight="364.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
     </columnConstraints>
@@ -26,6 +21,11 @@
                         <MenuItem fx:id="methodDepMenu" mnemonicParsing="false" onAction="#loadMethodDep" text="Method dependencies" />
                         <MenuItem fx:id="packageDepMenu" mnemonicParsing="false" onAction="#loadPackageDep" text="Package dependencies" />
                         <MenuItem mnemonicParsing="false" onAction="#closeApp" text="Close" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Export">
+                    <items>
+                        <MenuItem fx:id="exportToXML" mnemonicParsing="false" onAction="#exportToXML" text="XML" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">

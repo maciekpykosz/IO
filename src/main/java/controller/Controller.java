@@ -99,6 +99,10 @@ public class Controller  {
         }
     }
 
+    public void exportToXML(ActionEvent actionEvent){
+        //create XML and save it to file
+    }
+
     public void closeApp(ActionEvent actionEvent) {
         Platform.exit();
     }
