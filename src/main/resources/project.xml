@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Project DocumentationType="html" ExporterVersion="12.2" Name="untitled" UmlVersion="2.x" Xml_structure="simple">
+  <Models>
+    <Class Id="37" Name="model.export"/>
+    <Class Id="38" Name="model"/>
+    <Class Id="39" Name="controller"/>
+    <Class Id="40" Name="getIds&#10;model"/>
+    <Class Id="43" Name="getIds&#10;model.export"/>
+    <Class Id="44" Name="getDependencyList&#10;model"/>
+    <Class Id="47" Name="getDependencyList&#10;model.export"/>
+    <Class Id="48" Name="getId&#10;model"/>
+    <Class Id="51" Name="getId&#10;model.export"/>
+    <Class Id="56" Name="toString&#10;model"/>
+    <Class Id="59" Name="toString&#10;model.export"/>
+    <Class Id="64" Name="getName&#10;model"/>
+    <Class Id="67" Name="getName&#10;model.export"/>
+    <Class Id="83" Name="toString&#10;controller"/>
+    <Class Id="88" Name="getFilesDependencies&#10;model"/>
+    <Class Id="91" Name="getFilesDependencies&#10;controller"/>
+    <Class Id="104" Name="getGraphForDependencies&#10;model"/>
+    <Class Id="107" Name="getGraphForDependencies&#10;controller"/>
+    <Class Id="136" Name="getMethodsDependencies&#10;model"/>
+    <Class Id="139" Name="getMethodsDependencies&#10;controller"/>
+    <Class Id="152" Name="calculateWeightsForMethods&#10;model"/>
+    <Class Id="155" Name="calculateWeightsForMethods&#10;controller"/>
+    <Class Id="200" Name="getModuleDependencies&#10;model"/>
+    <Class Id="203" Name="getModuleDependencies&#10;controller"/>
+    <Class Id="264" Name="getLastCreatedDependencies&#10;model"/>
+    <Class Id="267" Name="getLastCreatedDependencies&#10;controller"/>
+    <Class Id="280" Name="addClassesWithDependencies&#10;model.export"/>
+    <Class Id="283" Name="addClassesWithDependencies&#10;controller"/>
+    <Class Id="284" Name="getBuilder&#10;model.export"/>
+    <Class Id="287" Name="getBuilder&#10;controller"/>
+    <Class Id="304" Name="getProperties&#10;model.export"/>
+    <Class Id="307" Name="getProperties&#10;controller"/>
+    <Usage From="37" Id="308" To="67"/>
+    <Usage From="37" Id="309" To="43"/>
+    <Usage From="37" Id="310" To="47"/>
+    <Usage From="37" Id="311" To="51"/>
+    <Usage From="37" Id="312" To="39"/>
+    <Usage From="37" Id="313" To="59"/>
+    <Usage From="38" Id="314" To="39"/>
+    <Usage From="38" Id="315" To="37"/>
+    <Usage From="39" Id="316" To="203"/>
+    <Usage From="39" Id="317" To="267"/>
+    <Usage From="39" Id="318" To="91"/>
+    <Usage From="39" Id="319" To="83"/>
+    <Usage From="39" Id="320" To="107"/>
+    <Usage From="39" Id="321" To="283"/>
+    <Usage From="39" Id="322" To="287"/>
+    <Usage From="39" Id="323" To="307"/>
+    <Usage From="39" Id="324" To="139"/>
+    <Usage From="39" Id="325" To="155"/>
+    <Usage From="40" Id="326" To="38"/>
+    <Usage From="44" Id="327" To="38"/>
+    <Usage From="48" Id="328" To="38"/>
+    <Usage From="56" Id="329" To="38"/>
+    <Usage From="64" Id="330" To="38"/>
+    <Usage From="88" Id="331" To="38"/>
+    <Usage From="104" Id="332" To="38"/>
+    <Usage From="136" Id="333" To="38"/>
+    <Usage From="152" Id="334" To="38"/>
+    <Usage From="200" Id="335" To="38"/>
+    <Usage From="264" Id="336" To="38"/>
+    <Usage From="280" Id="337" To="37"/>
+    <Usage From="284" Id="338" To="37"/>
+    <Usage From="304" Id="339" To="37"/>
+  </Models>
+</Project>

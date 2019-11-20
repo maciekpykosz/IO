@@ -16,6 +16,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class DependencyFinder {
+
+    private List<DependencyObj> lastCreatedDependencies;
+
+    public List<DependencyObj> getLastCreatedDependencies() {
+        return lastCreatedDependencies;
+    }
+
     public List<DependencyObj> getFilesDependencies(String absoluteDirectoryPath){//Function which construct files dependency for STORY 1
 
         List<DependencyObj> filesDependencies = new LinkedList<>();
@@ -70,6 +77,7 @@ public class DependencyFinder {
                 }
             }
         }
+        lastCreatedDependencies = filesDependencies;
         return filesDependencies;
     }
 
@@ -120,6 +128,7 @@ public class DependencyFinder {
                 }
             }
         }
+        lastCreatedDependencies = dependenciesList;
         return dependenciesList;
     }
 
@@ -249,6 +258,7 @@ public class DependencyFinder {
                 }
             }
         }
+        lastCreatedDependencies = moduleDependencies;
         return moduleDependencies;
     }
 }

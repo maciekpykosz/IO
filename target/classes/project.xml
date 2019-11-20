@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Project DocumentationType="html" ExporterVersion="12.2" Name="untitled" UmlVersion="2.x" Xml_structure="simple">
+  <Models>
+    <Class Id="1" Name="getId"/>
+    <Class Id="2" Name="getIds"/>
+    <Class Id="3" Name="getName"/>
+    <Class Id="4" Name="setName"/>
+    <Class Id="5" Name="getWeight"/>
+    <Class Id="6" Name="setWeight"/>
+    <Class Id="7" Name="getDependencyList"/>
+    <Class Id="8" Name="setDependencyList"/>
+    <Class Id="9" Name="addDependency"/>
+    <Class Id="10" Name="calculateWeightsForMethods"/>
+    <Class Id="11" Name="toString"/>
+    <Class Id="12" Name="equals"/>
+    <Class Id="13" Name="hashCode"/>
+    <Class Id="14" Name="getBuilder"/>
+    <Class Id="15" Name="getProperties"/>
+    <Class Id="16" Name="getGeneralizations"/>
+    <Class Id="17" Name="addClassesWithDependencies"/>
+    <Class Id="18" Name="saveGraphImage"/>
+    <Class Id="19" Name="convertToFxImage"/>
+    <Class Id="20" Name="loadingImage"/>
+    <Class Id="21" Name="infoAlert"/>
+    <Class Id="22" Name="getFrom"/>
+    <Class Id="23" Name="getTo"/>
+    <Class Id="24" Name="getGraphForDependencies"/>
+    <Class Id="25" Name="toString"/>
+    <Class Id="26" Name="start"/>
+    <Class Id="27" Name="main"/>
+    <Class Id="28" Name="getLastCreatedDependencies"/>
+    <Class Id="29" Name="getFilesDependencies"/>
+    <Class Id="30" Name="getMethodsDependencies"/>
+    <Class Id="31" Name="getModuleDependencies"/>
+    <Class Id="32" Name="setStage"/>
+    <Class Id="33" Name="loadFileDep"/>
+    <Class Id="34" Name="loadMethodDep"/>
+    <Class Id="35" Name="loadPackageDep"/>
+    <Class Id="36" Name="exportToXML"/>
+    <Class Id="37" Name="closeApp"/>
+    <Class Id="38" Name="showAppInfo"/>
+    <Usage From="1" Id="99" To="16"/>
+    <Usage From="1" Id="100" To="17"/>
+    <Usage From="3" Id="101" To="31"/>
+    <Usage From="3" Id="102" To="17"/>
+    <Usage From="3" Id="103" To="30"/>
+    <Usage From="3" Id="104" To="29"/>
+    <Usage From="5" Id="105" To="31"/>
+    <Usage From="5" Id="106" To="10"/>
+    <Usage From="6" Id="107" To="31"/>
+    <Usage From="6" Id="108" To="10"/>
+    <Usage From="6" Id="109" To="29"/>
+    <Usage From="7" Id="110" To="31"/>
+    <Usage From="7" Id="111" To="16"/>
+    <Usage From="7" Id="112" To="10"/>
+    <Usage From="7" Id="113" To="30"/>
+    <Usage From="7" Id="114" To="24"/>
+    <Usage From="7" Id="115" To="29"/>
+    <Usage From="10" Id="116" To="34"/>
+    <Usage From="10" Id="117" To="35"/>
+    <Usage From="11" Id="118" To="34"/>
+    <Usage From="11" Id="119" To="36"/>
+    <Usage From="11" Id="120" To="33"/>
+    <Usage From="11" Id="121" To="17"/>
+    <Usage From="11" Id="122" To="35"/>
+    <Usage From="11" Id="123" To="26"/>
+    <Usage From="11" Id="124" To="18"/>
+    <Usage From="11" Id="125" To="24"/>
+    <Usage From="12" Id="126" To="31"/>
+    <Usage From="12" Id="127" To="30"/>
+    <Usage From="12" Id="128" To="29"/>
+    <Usage From="14" Id="129" To="36"/>
+    <Usage From="15" Id="130" To="36"/>
+    <Usage From="16" Id="131" To="17"/>
+    <Usage From="17" Id="132" To="36"/>
+    <Usage From="18" Id="133" To="34"/>
+    <Usage From="18" Id="134" To="33"/>
+    <Usage From="18" Id="135" To="35"/>
+    <Usage From="19" Id="136" To="20"/>
+    <Usage From="20" Id="137" To="34"/>
+    <Usage From="20" Id="138" To="33"/>
+    <Usage From="20" Id="139" To="35"/>
+    <Usage From="21" Id="140" To="38"/>
+    <Usage From="22" Id="141" To="17"/>
+    <Usage From="23" Id="142" To="17"/>
+    <Usage From="24" Id="143" To="34"/>
+    <Usage From="24" Id="144" To="33"/>
+    <Usage From="24" Id="145" To="35"/>
+    <Usage From="25" Id="146" To="34"/>
+    <Usage From="25" Id="147" To="36"/>
+    <Usage From="25" Id="148" To="33"/>
+    <Usage From="25" Id="149" To="17"/>
+    <Usage From="25" Id="150" To="35"/>
+    <Usage From="25" Id="151" To="26"/>
+    <Usage From="25" Id="152" To="18"/>
+    <Usage From="25" Id="153" To="24"/>
+    <Usage From="28" Id="154" To="36"/>
+    <Usage From="29" Id="155" To="33"/>
+    <Usage From="30" Id="156" To="34"/>
+    <Usage From="31" Id="157" To="35"/>
+    <Usage From="32" Id="158" To="26"/>
+  </Models>
+</Project>
