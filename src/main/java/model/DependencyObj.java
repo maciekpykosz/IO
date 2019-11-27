@@ -74,7 +74,7 @@ public class DependencyObj {
 
     @Override
     public String toString() {
-        return this.name + "n" + this.weight;
+        return this.name + "\n" + this.weight;
     }
 
     @Override //containsKey basing on this method, so i need to compare 2 obj based on name

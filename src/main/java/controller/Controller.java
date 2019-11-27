@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -40,12 +41,6 @@ import model.export.XMLCreator;
 public class Controller {
     @FXML
     private GridPane gridPane;
-    @FXML
-    private MenuItem fileDepMenu;
-    @FXML
-    private MenuItem methodDepMenu;
-    @FXML
-    private MenuItem packageDepMenu;
     private GraphDraw graphDraw;
     @FXML
     private Label viewingInfo;
@@ -56,9 +51,14 @@ public class Controller {
 
     private DependencyFinder dependencyFinder;
     private DirectoryChooser directoryChooser;
-    private final static String fileNameForFirstGraph = "graf1";
-    private final static String fileNameForSecondGraph = "graf2";
-    private final static String fileNameForThirdGraph = "graf3";
+    private final static String fileNameForFirstGraph = "fileDependencies";
+    private final static String fileNameForSecondGraph = "methodDependencies";
+    private final static String fileNameForThirdGraph = "moduleDependencies";
+    private final static String fileNameForMixedGraph = "mixedDependencies";
+
+    private interface LoadDependency {
+        List<DependencyObj> getDependencies(String absolutePath);
+    }
 
     public Controller() {
         super();
@@ -71,48 +71,30 @@ public class Controller {
         this.onCreatedStage = onCreatedStage;
     }
 
-    public void loadFileDep(ActionEvent actionEvent) {
+    private void makeDependencies(LoadDependency loadDependency, String fileName, String viewingInfoText) {
         ControllerFunctions.setDefaultDirector(directoryChooser);
         File selectedDir = directoryChooser.showDialog(onCreatedStage);
         if (selectedDir != null) {
-            List<DependencyObj> dependencyObjs = dependencyFinder.getFilesDependencies(selectedDir.getAbsolutePath());
+            List<DependencyObj> dependencyObjs = loadDependency.getDependencies(selectedDir.getAbsolutePath());
             DefaultDirectedWeightedGraph<DependencyObj, EdgeSettings> g1 = graphDraw.getGraphForDependencies(dependencyObjs);
-            ControllerFunctions.saveGraphImage(fileNameForFirstGraph, g1);
-            File imageFile1 = new File(System.getProperty("user.dir").toString() + "/src/main/resources/" + fileNameForFirstGraph + ".png");
-            viewingInfo.setText("Showing classs dependencies");
+            ControllerFunctions.saveGraphImage(fileName, g1);
+            File imageFile1 = new File(System.getProperty("user.dir").toString() + "/src/main/resources/" + fileName + ".png");
+            viewingInfo.setText(viewingInfoText);
 
             ControllerFunctions.loadingImage(imageFile1, imageLabel, image, gridPane);
         }
     }
 
-    public void loadMethodDep(ActionEvent actionEvent) {
-        ControllerFunctions.setDefaultDirector(directoryChooser);
-        File selectedDir = directoryChooser.showDialog(onCreatedStage);
-        if (selectedDir != null) {
-            List<DependencyObj> dependencyObjs = dependencyFinder.getMethodsDependencies(selectedDir.getAbsolutePath());
-            DependencyObj.calculateWeightsForMethods(dependencyObjs);
-            DefaultDirectedWeightedGraph<DependencyObj, EdgeSettings> g2 = graphDraw.getGraphForDependencies(dependencyObjs);
-            ControllerFunctions.saveGraphImage(fileNameForSecondGraph, g2);
-            File imageFile2 = new File(System.getProperty("user.dir").toString() + "/src/main/resources/" + fileNameForSecondGraph + ".png");
-            viewingInfo.setText("Showing method dependencies");
+    public void loadFileDep(ActionEvent actionEvent) {
+        makeDependencies(absolutePath -> dependencyFinder.getFilesDependencies(absolutePath), fileNameForFirstGraph, "Showing class dependencies");
+    }
 
-            ControllerFunctions.loadingImage(imageFile2, imageLabel, image, gridPane);
-        }
+    public void loadMethodDep(ActionEvent actionEvent) {
+        makeDependencies(absolutePath -> dependencyFinder.getMethodsDependencies(absolutePath), fileNameForSecondGraph, "Showing method dependencies");
     }
 
     public void loadPackageDep(ActionEvent actionEvent) {
-        ControllerFunctions.setDefaultDirector(directoryChooser);
-        File selectedDir = directoryChooser.showDialog(onCreatedStage);
-        if (selectedDir != null) {
-            List<DependencyObj> dependencyObjs = dependencyFinder.getModuleDependencies(selectedDir.getAbsolutePath());
-            DependencyObj.calculateWeightsForMethods(dependencyObjs);
-            DefaultDirectedWeightedGraph<DependencyObj, EdgeSettings> g3 = graphDraw.getGraphForDependencies(dependencyObjs);
-            ControllerFunctions.saveGraphImage(fileNameForThirdGraph, g3);
-            File imageFile3 = new File(System.getProperty("user.dir").toString() + "/src/main/resources/" + fileNameForThirdGraph + ".png");
-            viewingInfo.setText("Showing module dependencies");
-
-            ControllerFunctions.loadingImage(imageFile3, imageLabel, image, gridPane);
-        }
+        makeDependencies(absolutePath -> dependencyFinder.getModuleDependencies(absolutePath), fileNameForThirdGraph, "Showing module dependencies");
     }
 
     public void exportToXML(ActionEvent actionEvent) {
@@ -123,7 +105,7 @@ public class Controller {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML", "*.xml"));
         File defaultDirectory = new File(System.getProperty("user.dir").toString() + "/src/main/resources");
-        if (! defaultDirectory.exists()) {
+        if (!defaultDirectory.exists()) {
             defaultDirectory.mkdirs();
         }
         fileChooser.setInitialDirectory(defaultDirectory);
@@ -140,72 +122,53 @@ public class Controller {
             }
         }
     }
-    public void chooseCombination()
-    {
+
+    public void chooseCombination() {
         VBox secondaryLayout = new VBox();
-        CheckBox checkBoxFile=new CheckBox("File Dependencies");
-        CheckBox checkBoxMethod= new CheckBox("Method Dependencies");
+        CheckBox checkBoxFile = new CheckBox("File Dependencies");
+        CheckBox checkBoxMethod = new CheckBox("Method Dependencies");
         CheckBox checkBoxPackage = new CheckBox("Package Dependencies");
         Label l = new Label("Choose your combination");
-        Button b=new Button("OK");
-        Button c=new Button("Clear");
+        Button b = new Button("OK");
+        Button c = new Button("Clear");
         secondaryLayout.getChildren().add(l);
         secondaryLayout.getChildren().add(checkBoxFile);
         secondaryLayout.getChildren().add(checkBoxMethod);
         secondaryLayout.getChildren().add(checkBoxPackage);
         secondaryLayout.getChildren().add(b);
         secondaryLayout.getChildren().add(c);
-        b.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-                if(checkBoxFile.isSelected() & checkBoxMethod.isSelected()==false & checkBoxPackage.isSelected()==false  )
-                {
-                    loadFileDep(event);
-                }
-                else if (checkBoxMethod.isSelected() & checkBoxFile.isSelected()==false & checkBoxPackage.isSelected()==false  )
-                {
-                    loadMethodDep(event);
-                }
-                else if (checkBoxPackage.isSelected() & checkBoxFile.isSelected()==false & checkBoxMethod.isSelected()==false)
-                {
-                    loadPackageDep(event);
-                }
-                else if (checkBoxFile.isSelected() & checkBoxMethod.isSelected() & checkBoxPackage.isSelected()==false)
-                {
-                    /*file & method graph*/
-                }
-                else if (checkBoxFile.isSelected() & checkBoxMethod.isSelected()==false & checkBoxPackage.isSelected())
-                {
-                    /*file & package graph*/
-                }
-                else if (checkBoxFile.isSelected()==false & checkBoxMethod.isSelected()& checkBoxPackage.isSelected())
-                {
-                    /*method & package graph*/
-                }
-                else if (checkBoxFile.isSelected() & checkBoxMethod.isSelected()& checkBoxPackage.isSelected())
-                {
-                    /*all in*/
-                }
-
-            }
-        });
-        c.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                checkBoxFile.setSelected(false);
-                checkBoxMethod.setSelected(false);
-                checkBoxPackage.setSelected(false);
-            }
-        });
         Scene secondScene = new Scene(secondaryLayout, 150, 120);
 
         Stage newWindow = new Stage();
         newWindow.setTitle("Choose graph combination");
-       newWindow.setScene(secondScene);
-       newWindow.show();
+        newWindow.setScene(secondScene);
+        newWindow.show();
+        b.setOnAction(event -> {
+            makeDependencies(absolutePath -> {
+                List<DependencyObj> mixedDependencies = new ArrayList<>();
+                if (checkBoxFile.isSelected()) {
+                    List<DependencyObj> filesDependencies = dependencyFinder.getFilesDependencies(absolutePath);
+                    mixedDependencies.addAll(filesDependencies);
+                }
+                if (checkBoxMethod.isSelected()) {
+                    List<DependencyObj> methodsDependencies = dependencyFinder.getMethodsDependencies(absolutePath);
+                    mixedDependencies.addAll(methodsDependencies);
+                }
+                if (checkBoxPackage.isSelected()) {
+                    List<DependencyObj> moduleDependencies = dependencyFinder.getModuleDependencies(absolutePath);
+                    mixedDependencies.addAll(moduleDependencies);
+                }
+                return mixedDependencies;
+            }, fileNameForMixedGraph, "Showing mixed dependencies");
+            newWindow.close();
+        });
+        c.setOnAction(event -> {
+            checkBoxFile.setSelected(false);
+            checkBoxMethod.setSelected(false);
+            checkBoxPackage.setSelected(false);
+            newWindow.close();
+        });
     }
-
 
     public void closeApp(ActionEvent actionEvent) {
         Platform.exit();

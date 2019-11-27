@@ -16,17 +16,17 @@
     <children>
         <MenuBar GridPane.valignment="TOP">
             <menus>
-                <Menu mnemonicParsing="false" text="Menu">
+                <Menu mnemonicParsing="false" text="Dependencies">
                     <items>
-                        <MenuItem fx:id="chooseGraphCombination" mnemonicParsing="false" onAction="#chooseCombination"  text="choose Graph combination"/>
+                        <MenuItem fx:id="fileDepMenu" mnemonicParsing="false" onAction="#loadFileDep" text="File" />
+                        <MenuItem fx:id="methodDepMenu" mnemonicParsing="false" onAction="#loadMethodDep" text="Method" />
+                        <MenuItem fx:id="packageDepMenu" mnemonicParsing="false" onAction="#loadPackageDep" text="Module" />
+                        <MenuItem mnemonicParsing="false" onAction="#closeApp" text="Close" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="File">
+                <Menu mnemonicParsing="false" text="MixedDependencies">
                     <items>
-                        <MenuItem fx:id="fileDepMenu" mnemonicParsing="false" onAction="#loadFileDep" text="File dependencies" />
-                        <MenuItem fx:id="methodDepMenu" mnemonicParsing="false" onAction="#loadMethodDep" text="Method dependencies" />
-                        <MenuItem fx:id="packageDepMenu" mnemonicParsing="false" onAction="#loadPackageDep" text="Package dependencies" />
-                        <MenuItem mnemonicParsing="false" onAction="#closeApp" text="Close" />
+                        <MenuItem fx:id="chooseGraphCombination" mnemonicParsing="false" onAction="#chooseCombination"  text="Choose combination"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Export">
