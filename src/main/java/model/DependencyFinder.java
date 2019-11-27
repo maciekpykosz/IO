@@ -22,7 +22,11 @@ public class DependencyFinder {
         return lastCreatedDependencies;
     }
 
-    public List<DependencyObj> getFilesDependencies(String absoluteDirectoryPath){//Function which construct files dependency for STORY 1
+    public List<DependencyObj> getFilesDependencies(String absoluteDirectoryPath) {
+        return getFilesDependencies(absoluteDirectoryPath, "");
+    }
+
+    public List<DependencyObj> getFilesDependencies(String absoluteDirectoryPath, String style){//Function which construct files dependency for STORY 1
 
         List<DependencyObj> filesDependencies = new LinkedList<>();
         List<TypeDeclaration> classList = new LinkedList<>();
@@ -35,7 +39,7 @@ public class DependencyFinder {
             if(!result.isPresent()) continue; //skip empty object
             for(TypeDeclaration typeDec : result.get().getTypes()) {
                 DependencyObj obj = new DependencyObj(typeDec.getNameAsString());
-
+                obj.setStyle(style);
                 //Size of file represented as lines count
                 Optional<Range> fileRange = typeDec.getRange();
                 if(fileRange.isPresent()){
@@ -80,7 +84,11 @@ public class DependencyFinder {
         return filesDependencies;
     }
 
-    public List<DependencyObj> getMethodsDependencies(String absoluteDirectoryPath) { // STORY 2
+    public List<DependencyObj> getMethodsDependencies(String absoluteDirectoryPath) {
+        return getMethodsDependencies(absoluteDirectoryPath, "");
+    }
+
+    public List<DependencyObj> getMethodsDependencies(String absoluteDirectoryPath, String style) { // STORY 2
         List<DependencyObj> dependenciesList = new LinkedList<>();
         List<MethodDeclaration> methodsList = new LinkedList<>();
 
@@ -98,6 +106,7 @@ public class DependencyFinder {
                     if (member.isMethodDeclaration()) {
                         MethodDeclaration method = (MethodDeclaration) member;
                         DependencyObj methodDependency = new DependencyObj(method.getNameAsString());
+                        methodDependency.setStyle(style);
                         dependenciesList.add(methodDependency);
                         methodsList.add(method);
                     }
@@ -131,8 +140,11 @@ public class DependencyFinder {
         return dependenciesList;
     }
 
+    public List<DependencyObj> getModuleDependencies(String rootFile) {
+        return getModuleDependencies(rootFile, "");
+    }
 
-    public List<DependencyObj> getModuleDependencies(String rootFile) {    //story 3
+    public List<DependencyObj> getModuleDependencies(String rootFile, String style) {    //story 3
         List<DependencyObj> moduleDependencies = new LinkedList<>();
         Map<PackageDeclaration, Set<DependencyObj>> packagesMethods = new HashMap<>(); //set to have unique method names
 
@@ -157,7 +169,11 @@ public class DependencyFinder {
             List<DependencyObj> allClassMethods = classFile
                     .findAll(MethodDeclaration.class)
                     .stream()
-                    .map((method) -> new DependencyObj(method.getNameAsString() + "\n" + packageName))
+                    .map((method) -> {
+                        DependencyObj temp = new DependencyObj(method.getNameAsString() + "\n" + packageName);
+                        temp.setStyle(style);
+                        return temp;
+                    })
                     .collect(Collectors.toList());
 
 

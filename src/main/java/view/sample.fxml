@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<?import javafx.scene.shape.Box?>
-<GridPane prefHeight="364.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
+<GridPane prefHeight="364.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
     </columnConstraints>
@@ -26,7 +30,7 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="MixedDependencies">
                     <items>
-                        <MenuItem fx:id="chooseGraphCombination" mnemonicParsing="false" onAction="#chooseCombination"  text="Choose combination"/>
+                        <MenuItem fx:id="chooseGraphCombination" mnemonicParsing="false" onAction="#chooseCombination" text="Choose combination" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Export">
@@ -50,7 +54,7 @@
                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <ImageView fx:id="imageLabel" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="0" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+                <Canvas fx:id="imageLabel" height="400.0" onMousePressed="#imageTranslateStart" onMouseReleased="#imageTranslateEnd" onScroll="#scaleImage" pickOnBounds="true" width="600.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="0" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
                 <Label fx:id="viewingInfo" GridPane.rowIndex="1" />
             </children>
         </GridPane>

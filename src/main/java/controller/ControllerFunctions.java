@@ -2,27 +2,28 @@ package controller;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.layout.mxIGraphLayout;
+import com.mxgraph.model.mxICell;
 import com.mxgraph.util.mxCellRenderer;
-
-import org.jgrapht.ext.JGraphXAdapter;
-import org.jgrapht.graph.DefaultDirectedWeightedGraph;
-
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import model.DependencyObj;
 import model.EdgeSettings;
+import org.jgrapht.ext.JGraphXAdapter;
+import org.jgrapht.graph.DefaultDirectedWeightedGraph;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 public class ControllerFunctions {
     private static Stage onCreatedStage;
@@ -35,8 +36,11 @@ public class ControllerFunctions {
         }
 
         JGraphXAdapter<DependencyObj, EdgeSettings> graphAdapter = new JGraphXAdapter<>(g);
-
         mxIGraphLayout layout = new mxHierarchicalLayout(graphAdapter);
+
+        for(Map.Entry<DependencyObj, mxICell> iter : graphAdapter.getVertexToCellMap().entrySet()) {
+            iter.getValue().setStyle(iter.getKey().getStyle());
+        }
         layout.execute(graphAdapter.getDefaultParent());
 
         BufferedImage image = mxCellRenderer.createBufferedImage(graphAdapter, null, 2, java.awt.Color.WHITE , true, null);
@@ -63,16 +67,16 @@ public class ControllerFunctions {
         return new ImageView(wr).getImage();
     }
 
-    public static void loadingImage(File imageFile, ImageView imageLabel, Image image, GridPane gridPane){
+    public static void loadingImage(File imageFile, Canvas imageLabel, Controller controller, GridPane gridPane){
         try {
-            image = convertToFxImage(ImageIO.read(imageFile));
-
-            imageLabel.setImage(image);
-            imageLabel.setFitHeight(gridPane.getHeight());
-            imageLabel.setFitWidth(gridPane.getWidth());
-            imageLabel.fitHeightProperty().bind(gridPane.heightProperty());
-            //icon = new ImageView(icon.getImage());
-            System.out.println(" X: " + imageLabel.getScaleX() + " Y: " + imageLabel.getScaleY() + " Width: " + imageLabel.getImage().getWidth() + "Height: " + imageLabel.getImage().getHeight());
+            Image image = convertToFxImage(ImageIO.read(imageFile));
+            if(controller.getImage() != null) {
+                imageLabel.getGraphicsContext2D().clearRect(0,0,controller.getImage().getWidth(), controller.getImage().getHeight());
+            }
+            controller.setImage(image);
+            imageLabel.getGraphicsContext2D().restore();
+            imageLabel.getGraphicsContext2D().setFill(Color.BLACK);
+            imageLabel.getGraphicsContext2D().drawImage(image, 0., 0.);
         }catch (IOException e) {
             System.err.println("Blad odczytu obrazka");
             e.printStackTrace();

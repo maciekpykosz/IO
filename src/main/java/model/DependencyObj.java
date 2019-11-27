@@ -10,6 +10,7 @@ public class DependencyObj {
     private Integer id;
     private String name;
     private Integer weight = 0;  // Current object weight
+    private String edgeStyle = "";
     private HashMap<DependencyObj, Integer> dependencyList = new HashMap<>(); // dependencyObject with edge weight
 
     public DependencyObj() {
@@ -88,5 +89,13 @@ public class DependencyObj {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    public String getStyle() {
+        return this.edgeStyle;
+    }
+
+    public void setStyle(String style) {
+        this.edgeStyle = style;
     }
 }
