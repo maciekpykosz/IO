@@ -4,6 +4,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.shape.Box?>
 <GridPane prefHeight="364.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -15,6 +16,11 @@
     <children>
         <MenuBar GridPane.valignment="TOP">
             <menus>
+                <Menu mnemonicParsing="false" text="Menu">
+                    <items>
+                        <MenuItem fx:id="chooseGraphCombination" mnemonicParsing="false" onAction="#chooseCombination"  text="choose Graph combination"/>
+                    </items>
+                </Menu>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
                         <MenuItem fx:id="fileDepMenu" mnemonicParsing="false" onAction="#loadFileDep" text="File dependencies" />

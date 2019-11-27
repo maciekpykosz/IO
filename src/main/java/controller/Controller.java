@@ -2,12 +2,17 @@ package controller;
 
 import com.jamesmurty.utils.XMLBuilder2;
 
-import javafx.scene.control.Alert;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import model.export.XMLCreator;
 
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -21,8 +26,6 @@ import javax.swing.JFileChooser;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -137,6 +140,72 @@ public class Controller {
             }
         }
     }
+    public void chooseCombination()
+    {
+        VBox secondaryLayout = new VBox();
+        CheckBox checkBoxFile=new CheckBox("File Dependencies");
+        CheckBox checkBoxMethod= new CheckBox("Method Dependencies");
+        CheckBox checkBoxPackage = new CheckBox("Package Dependencies");
+        Label l = new Label("Choose your combination");
+        Button b=new Button("OK");
+        Button c=new Button("Clear");
+        secondaryLayout.getChildren().add(l);
+        secondaryLayout.getChildren().add(checkBoxFile);
+        secondaryLayout.getChildren().add(checkBoxMethod);
+        secondaryLayout.getChildren().add(checkBoxPackage);
+        secondaryLayout.getChildren().add(b);
+        secondaryLayout.getChildren().add(c);
+        b.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                if(checkBoxFile.isSelected() & checkBoxMethod.isSelected()==false & checkBoxPackage.isSelected()==false  )
+                {
+                    loadFileDep(event);
+                }
+                else if (checkBoxMethod.isSelected() & checkBoxFile.isSelected()==false & checkBoxPackage.isSelected()==false  )
+                {
+                    loadMethodDep(event);
+                }
+                else if (checkBoxPackage.isSelected() & checkBoxFile.isSelected()==false & checkBoxMethod.isSelected()==false)
+                {
+                    loadPackageDep(event);
+                }
+                else if (checkBoxFile.isSelected() & checkBoxMethod.isSelected() & checkBoxPackage.isSelected()==false)
+                {
+                    /*file & method graph*/
+                }
+                else if (checkBoxFile.isSelected() & checkBoxMethod.isSelected()==false & checkBoxPackage.isSelected())
+                {
+                    /*file & package graph*/
+                }
+                else if (checkBoxFile.isSelected()==false & checkBoxMethod.isSelected()& checkBoxPackage.isSelected())
+                {
+                    /*method & package graph*/
+                }
+                else if (checkBoxFile.isSelected() & checkBoxMethod.isSelected()& checkBoxPackage.isSelected())
+                {
+                    /*all in*/
+                }
+
+            }
+        });
+        c.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                checkBoxFile.setSelected(false);
+                checkBoxMethod.setSelected(false);
+                checkBoxPackage.setSelected(false);
+            }
+        });
+        Scene secondScene = new Scene(secondaryLayout, 150, 120);
+
+        Stage newWindow = new Stage();
+        newWindow.setTitle("Choose graph combination");
+       newWindow.setScene(secondScene);
+       newWindow.show();
+    }
+
 
     public void closeApp(ActionEvent actionEvent) {
         Platform.exit();
