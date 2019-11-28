@@ -52,6 +52,7 @@ public class Controller {
     private final static String fileNameForSecondGraph = "methodDependencies";
     private final static String fileNameForThirdGraph = "moduleDependencies";
     private final static String fileNameForMixedGraph = "mixedDependencies";
+    private final static String fileNameForFourthGraph = "methodDefinitions";
 
     public void scaleImage(ScrollEvent scrollEvent) {
         System.out.println(scrollEvent);
@@ -202,8 +203,9 @@ public class Controller {
             newWindow.close();
         });
     }
-    public void loadMethodDefinitions()
-    {}
+    public void loadMethodDefinitions() {
+        makeDependencies(absolutePath -> dependencyFinder.getMethodsDefinitions(absolutePath), fileNameForFourthGraph, "Showing method definitions");
+    }
 
 
     public void closeApp(ActionEvent actionEvent) {

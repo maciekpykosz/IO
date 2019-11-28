@@ -276,4 +276,30 @@ public class DependencyFinder {
         lastCreatedDependencies = moduleDependencies;
         return moduleDependencies;
     }
+
+    public List<DependencyObj> getMethodsDefinitions(String absolutePath){
+        List<DependencyObj> methodDefinitions = new LinkedList<>();
+        SourceRoot root = new SourceRoot(Paths.get(absolutePath));
+        List<ParseResult<CompilationUnit>> resultList = root.tryToParseParallelized();
+
+        List<Optional<CompilationUnit>> compilationList =
+                resultList.stream().map(ParseResult::getResult).collect(Collectors.toList());
+        for(Optional<CompilationUnit> result : compilationList) {
+            if(!result.isPresent()) continue; //skip empty object
+            for(TypeDeclaration typeDec : result.get().getTypes()) {
+                DependencyObj classObject = new DependencyObj(typeDec.getNameAsString());
+                List<BodyDeclaration> bodyDeclarations = typeDec.getMembers();
+                for (BodyDeclaration bodyDeclaration : bodyDeclarations) {
+                    if (bodyDeclaration.isMethodDeclaration()){
+                        System.out.println(((MethodDeclaration) bodyDeclaration).getNameAsString());
+                        MethodDeclaration method = (MethodDeclaration) bodyDeclaration;
+                        DependencyObj methodDefinition = new DependencyObj(method.getNameAsString());
+                        classObject.addDependency(methodDefinition);
+                    }
+                }
+                methodDefinitions.add(classObject);
+            }
+        }
+        return methodDefinitions;
+    }
 }
