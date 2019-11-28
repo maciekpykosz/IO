@@ -202,6 +202,9 @@ public class Controller {
             newWindow.close();
         });
     }
+    public void loadMethodDefinitions()
+    {}
+
 
     public void closeApp(ActionEvent actionEvent) {
         Platform.exit();

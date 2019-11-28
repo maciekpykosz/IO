@@ -25,14 +25,12 @@
                         <MenuItem fx:id="fileDepMenu" mnemonicParsing="false" onAction="#loadFileDep" text="File" />
                         <MenuItem fx:id="methodDepMenu" mnemonicParsing="false" onAction="#loadMethodDep" text="Method" />
                         <MenuItem fx:id="packageDepMenu" mnemonicParsing="false" onAction="#loadPackageDep" text="Module" />
+                        <MenuItem fx:id="chooseGraphCombination" mnemonicParsing="false" onAction="#chooseCombination" text="Mixed" />
+                        <MenuItem fx:id="methodDefMenu" mnemonicParsing="false" onAction="#loadMethodDefinitions" text="Method Definitions" />
                         <MenuItem mnemonicParsing="false" onAction="#closeApp" text="Close" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="MixedDependencies">
-                    <items>
-                        <MenuItem fx:id="chooseGraphCombination" mnemonicParsing="false" onAction="#chooseCombination" text="Choose combination" />
-                    </items>
-                </Menu>
+
                 <Menu mnemonicParsing="false" text="Export">
                     <items>
                         <MenuItem fx:id="exportToXML" mnemonicParsing="false" onAction="#exportToXML" text="XML" />
