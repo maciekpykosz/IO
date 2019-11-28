@@ -14,8 +14,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import model.DependencyObj;
-import model.EdgeSettings;
+import model.dependency.DependencyObj;
+import model.GraphDraw.EdgeSettings;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 

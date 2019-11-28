@@ -9,7 +9,7 @@ import java.util.Properties;
 
 import javax.xml.transform.OutputKeys;
 
-import model.DependencyObj;
+import model.dependency.DependencyObj;
 
 public class XMLCreator {
 

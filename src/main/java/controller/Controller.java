@@ -19,10 +19,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import model.DependencyFinder;
-import model.DependencyObj;
-import model.EdgeSettings;
+import model.dependency.DependencyFinder;
+import model.dependency.DependencyObj;
 import model.GraphDraw;
+import model.GraphDraw.EdgeSettings;
 import model.export.XMLCreator;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 

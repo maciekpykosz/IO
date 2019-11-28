@@ -1,4 +1,6 @@
 package model;
+import model.dependency.DependencyObj;
+import org.jgraph.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 
 import java.util.HashMap;
@@ -19,4 +21,17 @@ public class GraphDraw {
         }
         return graph;
     }
+    public static class EdgeSettings extends DefaultEdge {
+        private String label;
+
+        public EdgeSettings(String label) {
+            this.label = label;
+        }
+
+        @Override
+        public String toString() {
+            return label;
+        }
+    }
+
 }

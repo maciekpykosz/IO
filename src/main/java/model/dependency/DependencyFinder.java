@@ -1,4 +1,4 @@
-package model;
+package model.dependency;
 
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.Range;

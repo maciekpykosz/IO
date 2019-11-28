@@ -1,4 +1,4 @@
-package model;
+package model.dependency;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,17 +6,14 @@ import java.util.Map;
 import java.util.Objects;
 
 public class DependencyObj {
-    private static Integer ids = 1;
-    private Integer id;
-    private String name;
-    private Integer weight = 0;  // Current object weight
-    private String edgeStyle = "";
-    private HashMap<DependencyObj, Integer> dependencyList = new HashMap<>(); // dependencyObject with edge weight
+    protected static Integer ids = 1;
+    protected Integer id;
+    protected String name;
+    protected Integer weight = 0;  // Current object weight
+    protected String edgeStyle = "";
+    protected HashMap<DependencyObj, Integer> dependencyList = new HashMap<>(); // dependencyObject with edge weight
 
-    public DependencyObj() {
-        id = ids;
-        ids++;
-    }
+
 
     public DependencyObj(String name) {
         this.name = name;
