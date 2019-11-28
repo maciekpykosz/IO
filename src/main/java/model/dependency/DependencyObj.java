@@ -13,8 +13,6 @@ public class DependencyObj {
     protected String edgeStyle = "";
     protected HashMap<DependencyObj, Integer> dependencyList = new HashMap<>(); // dependencyObject with edge weight
 
-
-
     public DependencyObj(String name) {
         this.name = name;
         id = ids;

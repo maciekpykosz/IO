@@ -120,7 +120,11 @@ public class Controller {
     }
 
     public void loadMethodDep(ActionEvent actionEvent) {
-        makeDependencies(absolutePath -> dependencyFinder.getMethodsDependencies(absolutePath), fileNameForSecondGraph, "Showing method dependencies");
+        makeDependencies(absolutePath -> {
+            List<DependencyObj> methodsDependencies = dependencyFinder.getMethodsDependencies(absolutePath);
+            DependencyObj.calculateWeightsForMethods(methodsDependencies);
+            return methodsDependencies;
+        }, fileNameForSecondGraph, "Showing method dependencies");
     }
 
     public void loadPackageDep(ActionEvent actionEvent) {

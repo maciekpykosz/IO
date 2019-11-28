@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Project DocumentationType="html" ExporterVersion="12.2" Name="untitled" UmlVersion="2.x" Xml_structure="simple">
   <Models>
-    <Class Id="1" Name="EdgeSettings"/>
-    <Class Id="2" Name="Controller"/>
-    <Class Id="3" Name="Generalization"/>
-    <Class Id="4" Name="XMLCreator"/>
-    <Class Id="5" Name="Main"/>
-    <Class Id="6" Name="GraphDraw"/>
-    <Class Id="7" Name="DependencyFinder"/>
-    <Class Id="8" Name="ControllerFunctions"/>
-    <Class Id="9" Name="DependencyObj"/>
-    <Usage From="1" Id="24" To="6"/>
-    <Usage From="1" Id="25" To="8"/>
-    <Usage From="1" Id="26" To="2"/>
-    <Usage From="2" Id="27" To="5"/>
-    <Usage From="3" Id="28" To="4"/>
-    <Usage From="4" Id="29" To="2"/>
-    <Usage From="6" Id="30" To="2"/>
-    <Usage From="7" Id="31" To="2"/>
-    <Usage From="8" Id="32" To="2"/>
-    <Usage From="9" Id="33" To="4"/>
-    <Usage From="9" Id="34" To="6"/>
-    <Usage From="9" Id="35" To="8"/>
-    <Usage From="9" Id="36" To="7"/>
-    <Usage From="9" Id="37" To="2"/>
+    <Class Id="1" Name="Generalization"/>
+    <Class Id="2" Name="DependencyFinder"/>
+    <Class Id="3" Name="DependencyObj"/>
+    <Class Id="4" Name="MethodDependency"/>
+    <Class Id="5" Name="GraphDraw"/>
+    <Class Id="6" Name="ModuleDependency"/>
+    <Class Id="7" Name="FileDependency"/>
+    <Class Id="8" Name="MethodDefinitionDependency"/>
+    <Class Id="9" Name="Controller"/>
+    <Class Id="10" Name="XMLCreator"/>
+    <Class Id="11" Name="Main"/>
+    <Class Id="12" Name="ControllerFunctions"/>
+    <Usage From="1" Id="34" To="10"/>
+    <Usage From="2" Id="35" To="9"/>
+    <Usage From="3" Id="36" To="10"/>
+    <Usage From="3" Id="37" To="6"/>
+    <Usage From="3" Id="38" To="5"/>
+    <Usage From="3" Id="39" To="8"/>
+    <Usage From="3" Id="40" To="12"/>
+    <Usage From="3" Id="41" To="7"/>
+    <Usage From="3" Id="42" To="2"/>
+    <Usage From="3" Id="43" To="9"/>
+    <Usage From="3" Id="44" To="4"/>
+    <Usage From="4" Id="45" To="2"/>
+    <Usage From="5" Id="46" To="9"/>
+    <Usage From="6" Id="47" To="2"/>
+    <Usage From="7" Id="48" To="2"/>
+    <Usage From="8" Id="49" To="5"/>
+    <Usage From="8" Id="50" To="2"/>
+    <Usage From="9" Id="51" To="12"/>
+    <Usage From="9" Id="52" To="11"/>
+    <Usage From="10" Id="53" To="9"/>
+    <Usage From="12" Id="54" To="9"/>
   </Models>
 </Project>

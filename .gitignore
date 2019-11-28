@@ -13,6 +13,9 @@
 .idea/**/dictionaries
 .idea/**/shelf
 
+#png and xml
+src/main/resources/*.png
+
 # Generated files
 .idea/**/contentModel.xml
 
