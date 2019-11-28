@@ -116,15 +116,15 @@ public class Controller {
     }
 
     public void loadFileDep(ActionEvent actionEvent) {
-        makeDependencies(absolutePath -> dependencyFinder.getFilesDependencies(absolutePath, "fillColor=red"), fileNameForFirstGraph, "Showing class dependencies");
+        makeDependencies(absolutePath -> dependencyFinder.getFilesDependencies(absolutePath), fileNameForFirstGraph, "Showing class dependencies");
     }
 
     public void loadMethodDep(ActionEvent actionEvent) {
-        makeDependencies(absolutePath -> dependencyFinder.getMethodsDependencies(absolutePath, "fillColor=blue"), fileNameForSecondGraph, "Showing method dependencies");
+        makeDependencies(absolutePath -> dependencyFinder.getMethodsDependencies(absolutePath), fileNameForSecondGraph, "Showing method dependencies");
     }
 
     public void loadPackageDep(ActionEvent actionEvent) {
-        makeDependencies(absolutePath -> dependencyFinder.getModuleDependencies(absolutePath, "fillColor=green"), fileNameForThirdGraph, "Showing module dependencies");
+        makeDependencies(absolutePath -> dependencyFinder.getModuleDependencies(absolutePath), fileNameForThirdGraph, "Showing module dependencies");
     }
 
     public void exportToXML(ActionEvent actionEvent) {
@@ -181,15 +181,15 @@ public class Controller {
             makeDependencies(absolutePath -> {
                 List<DependencyObj> mixedDependencies = new ArrayList<>();
                 if (checkBoxFile.isSelected()) {
-                    List<DependencyObj> filesDependencies = dependencyFinder.getFilesDependencies(absolutePath, "fillColor=red");
+                    List<DependencyObj> filesDependencies = dependencyFinder.getFilesDependencies(absolutePath);
                     mixedDependencies.addAll(filesDependencies);
                 }
                 if (checkBoxMethod.isSelected()) {
-                    List<DependencyObj> methodsDependencies = dependencyFinder.getMethodsDependencies(absolutePath, "fillColor=green");
+                    List<DependencyObj> methodsDependencies = dependencyFinder.getMethodsDependencies(absolutePath);
                     mixedDependencies.addAll(methodsDependencies);
                 }
                 if (checkBoxPackage.isSelected()) {
-                    List<DependencyObj> moduleDependencies = dependencyFinder.getModuleDependencies(absolutePath, "fillColor=blue");
+                    List<DependencyObj> moduleDependencies = dependencyFinder.getModuleDependencies(absolutePath);
                     mixedDependencies.addAll(moduleDependencies);
                 }
                 return mixedDependencies;
@@ -206,7 +206,6 @@ public class Controller {
     public void loadMethodDefinitions() {
         makeDependencies(absolutePath -> dependencyFinder.getMethodsDefinitions(absolutePath), fileNameForFourthGraph, "Showing method definitions");
     }
-
 
     public void closeApp(ActionEvent actionEvent) {
         Platform.exit();
