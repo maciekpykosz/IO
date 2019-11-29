@@ -23,10 +23,10 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ControllerFunctions {
-    private static Stage onCreatedStage;
     public static void saveGraphImage(String imageName, DefaultDirectedWeightedGraph<DependencyObj, EdgeSettings> g){
         File imgFile = new File(System.getProperty("user.dir").toString() + "/src/main/resources/" + imageName + ".png");
         try {
@@ -95,5 +95,59 @@ public class ControllerFunctions {
             defaultDirectory.mkdirs();
         }
         directoryChooser.setInitialDirectory(defaultDirectory);
+    }
+
+    public static List<DependencyObj> mergeDependencies(List<DependencyObj> methodDep, List<DependencyObj> packetDep) {
+        List<DependencyObj> mergedDep = new LinkedList<>();
+        //store all methods in packetDep
+        Map<String, DependencyObj> packetMethods = new HashMap<>();
+
+        packetDep.stream()
+                .filter((depObj -> depObj.getName().split("\\n").length > 1))
+                .forEach(dependencyObj -> {
+                    String methodName = dependencyObj.getName().split("\\n")[0];
+                    packetMethods.putIfAbsent(methodName, dependencyObj);
+                });
+
+        for(DependencyObj method : methodDep) {
+            //firstly check connections in methods
+            //stacks are to modify map after foreach loop
+            Stack<DependencyObj> linkToRemove = new Stack<>();
+            Stack<DependencyObj> linkToAdd = new Stack<>();
+
+            for(Map.Entry<DependencyObj, Integer> methodLink : method.getDependencyList().entrySet()) {
+                DependencyObj sameMethodLink = packetMethods.get(methodLink.getKey().getName());
+                if(sameMethodLink != null) {
+                    linkToRemove.push(methodLink.getKey());
+                    linkToAdd.push(sameMethodLink);
+                }
+            }
+
+            while(!linkToRemove.empty()) {
+                DependencyObj removedLink = linkToRemove.pop();
+                DependencyObj newLink = linkToAdd.pop();
+
+                method.getDependencyList().put(newLink, method.getDependencyList().get(removedLink));
+                method.getDependencyList().remove(removedLink);
+            }
+
+            //secondly check if method has duplicate in packet
+            DependencyObj sameMethodInPacket = packetMethods.get(method.getName());
+            if(sameMethodInPacket != null) {
+                //merge vertex
+                for(Map.Entry<DependencyObj, Integer> methodLink : method.getDependencyList().entrySet()) {
+                    sameMethodInPacket.getDependencyList().put(methodLink.getKey(), methodLink.getValue());
+                }
+
+                sameMethodInPacket.setStyle("fillColor=#007f7f");
+                sameMethodInPacket.setWeight(sameMethodInPacket.getWeight() + method.getWeight());
+            } else {
+                mergedDep.add(method);
+            }
+        }
+
+        mergedDep.addAll(packetDep);
+
+        return mergedDep;
     }
 }

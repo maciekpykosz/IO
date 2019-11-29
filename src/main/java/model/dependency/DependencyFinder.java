@@ -22,7 +22,12 @@ public class DependencyFinder {
         return lastCreatedDependencies;
     }
 
-    public List<DependencyObj> getFilesDependencies(String absoluteDirectoryPath){//Function which construct files dependency for STORY 1
+    /**
+     * Function which construct files dependency for STORY 1
+     * @param absoluteDirectoryPath Path where algorithm finds dependencies
+     * @return List of files with dependencies
+     */
+    public List<DependencyObj> getFilesDependencies(String absoluteDirectoryPath){
 
         List<DependencyObj> filesDependencies = new LinkedList<>();
         List<TypeDeclaration> classList = new LinkedList<>();
@@ -127,6 +132,7 @@ public class DependencyFinder {
             }
         }
         lastCreatedDependencies = dependenciesList;
+        DependencyObj.calculateWeightsForMethods(dependenciesList);
         return dependenciesList;
     }
 

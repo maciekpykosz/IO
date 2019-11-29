@@ -52,7 +52,7 @@
                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Canvas fx:id="imageLabel" height="400.0" onMousePressed="#imageTranslateStart" onMouseReleased="#imageTranslateEnd" onScroll="#scaleImage" pickOnBounds="true" width="600.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="0" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+                <Canvas fx:id="imageLabel" height="400.0" onMouseDragged="#imageTranslate" onMousePressed="#imageTranslateStart" onScroll="#scaleImage" pickOnBounds="true" width="600.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="0" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
                 <Label fx:id="viewingInfo" GridPane.rowIndex="1" />
             </children>
         </GridPane>

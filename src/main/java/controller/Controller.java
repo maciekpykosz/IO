@@ -16,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.transform.Affine;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -44,8 +45,8 @@ public class Controller {
     private Canvas imageLabel;
     private Image image;
     private Stage onCreatedStage;
-    private Point2D imageTranslateBegining;
-
+    private Point2D imageTranslateBeginning;
+    private Point2D screenCenter;
     private DependencyFinder dependencyFinder;
     private DirectoryChooser directoryChooser;
     private final static String fileNameForFirstGraph = "fileDependencies";
@@ -54,41 +55,46 @@ public class Controller {
     private final static String fileNameForMixedGraph = "mixedDependencies";
     private final static String fileNameForFourthGraph = "methodDefinitions";
 
+    private interface LoadDependency {
+        List<DependencyObj> getDependencies(String absolutePath);
+    }
+
     public void scaleImage(ScrollEvent scrollEvent) {
-        System.out.println(scrollEvent);
+        if(image == null)
+            return;
+
+        Affine transformMatrix = imageLabel.getGraphicsContext2D().getTransform();
         imageLabel.getGraphicsContext2D().clearRect(0,0,image.getWidth(), image.getHeight());
         if(scrollEvent.getDeltaY() > 0) {
-            imageLabel.getGraphicsContext2D().scale(1.2, 1.2);
+            transformMatrix.appendScale(1.2, 1.2, screenCenter);
         } else {
-            imageLabel.getGraphicsContext2D().scale(0.8,0.8);
+            transformMatrix.appendScale(0.8, 0.8, screenCenter);
         }
 
+        imageLabel.getGraphicsContext2D().setTransform(transformMatrix);
         imageLabel.getGraphicsContext2D().fill();
         imageLabel.getGraphicsContext2D().drawImage(image, 0,0);
     }
 
     public void imageTranslateStart(MouseEvent mouseEvent) {
         if(mouseEvent.getButton() == MouseButton.PRIMARY) {
-            this.imageTranslateBegining = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+            this.imageTranslateBeginning = new Point2D(mouseEvent.getX(), mouseEvent.getY());
         }
-        System.out.println("Clicked");
     }
 
-    public void imageTranslateEnd(MouseEvent mouseEvent) {
-        //in big scale dx is greater than in lower scale
+    public void imageTranslate(MouseEvent mouseEvent) {
+        if(image == null || mouseEvent.getButton() != MouseButton.PRIMARY)
+            return;
         double scale = imageLabel.getGraphicsContext2D().getTransform().getMxx(); // from transfrom matrix in graphics
         scale = 1/scale;
-        Point2D imageDxDy = this.imageTranslateBegining.subtract(mouseEvent.getX(), mouseEvent.getY()).multiply(-1 * scale);
+        Point2D imageDxDy = this.imageTranslateBeginning.subtract(mouseEvent.getX(), mouseEvent.getY()).multiply(-1 * scale);
+        screenCenter = screenCenter.subtract(imageDxDy);
         imageLabel.getGraphicsContext2D().clearRect(0,0,image.getWidth(), image.getHeight());
         imageLabel.getGraphicsContext2D().translate(imageDxDy.getX(), imageDxDy.getY());
         imageLabel.getGraphicsContext2D().drawImage(image, 0, 0);
-
-        System.out.println(imageDxDy);
+        this.imageTranslateBeginning = new Point2D(mouseEvent.getX(), mouseEvent.getY());
     }
 
-    private interface LoadDependency {
-        List<DependencyObj> getDependencies(String absolutePath);
-    }
 
     public Controller() {
         super();
@@ -111,7 +117,10 @@ public class Controller {
             File imageFile1 = new File(System.getProperty("user.dir").toString() + "/src/main/resources/" + fileName + ".png");
             viewingInfo.setText(viewingInfoText);
 
+            //reset translations
+            imageLabel.getGraphicsContext2D().setTransform(1,0,0,1,0,0);
             ControllerFunctions.loadingImage(imageFile1, imageLabel, this, gridPane);
+            screenCenter = new Point2D(imageLabel.getWidth()/2., imageLabel.getHeight()/2);
         }
     }
 
@@ -120,11 +129,9 @@ public class Controller {
     }
 
     public void loadMethodDep(ActionEvent actionEvent) {
-        makeDependencies(absolutePath -> {
-            List<DependencyObj> methodsDependencies = dependencyFinder.getMethodsDependencies(absolutePath);
-            DependencyObj.calculateWeightsForMethods(methodsDependencies);
-            return methodsDependencies;
-        }, fileNameForSecondGraph, "Showing method dependencies");
+        makeDependencies(absolutePath ->
+            dependencyFinder.getMethodsDependencies(absolutePath)
+        , fileNameForSecondGraph, "Showing method dependencies");
     }
 
     public void loadPackageDep(ActionEvent actionEvent) {
@@ -184,17 +191,21 @@ public class Controller {
         b.setOnAction(event -> {
             makeDependencies(absolutePath -> {
                 List<DependencyObj> mixedDependencies = new ArrayList<>();
-                if (checkBoxFile.isSelected()) {
-                    List<DependencyObj> filesDependencies = dependencyFinder.getFilesDependencies(absolutePath);
-                    mixedDependencies.addAll(filesDependencies);
-                }
                 if (checkBoxMethod.isSelected()) {
                     List<DependencyObj> methodsDependencies = dependencyFinder.getMethodsDependencies(absolutePath);
                     mixedDependencies.addAll(methodsDependencies);
                 }
                 if (checkBoxPackage.isSelected()) {
                     List<DependencyObj> moduleDependencies = dependencyFinder.getModuleDependencies(absolutePath);
-                    mixedDependencies.addAll(moduleDependencies);
+                    if(checkBoxMethod.isSelected()) {
+                        mixedDependencies.addAll(ControllerFunctions.mergeDependencies(mixedDependencies,moduleDependencies));
+                    } else {
+                        mixedDependencies.addAll(moduleDependencies);
+                    }
+                }
+                if (checkBoxFile.isSelected()) {
+                    List<DependencyObj> filesDependencies = dependencyFinder.getFilesDependencies(absolutePath);
+                    mixedDependencies.addAll(filesDependencies);
                 }
                 return mixedDependencies;
             }, fileNameForMixedGraph, "Showing mixed dependencies");
