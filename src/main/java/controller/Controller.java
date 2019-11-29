@@ -34,6 +34,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.CompletableFuture;
 
 public class Controller {
     @FXML
@@ -111,16 +112,19 @@ public class Controller {
         ControllerFunctions.setDefaultDirector(directoryChooser);
         File selectedDir = directoryChooser.showDialog(onCreatedStage);
         if (selectedDir != null) {
-            List<DependencyObj> dependencyObjs = loadDependency.getDependencies(selectedDir.getAbsolutePath());
-            DefaultDirectedWeightedGraph<DependencyObj, EdgeSettings> g1 = graphDraw.getGraphForDependencies(dependencyObjs);
-            ControllerFunctions.saveGraphImage(fileName, g1);
-            File imageFile1 = new File(System.getProperty("user.dir").toString() + "/src/main/resources/" + fileName + ".png");
-            viewingInfo.setText(viewingInfoText);
+            CompletableFuture.supplyAsync(()-> {
+                List<DependencyObj> dependencyObjs = loadDependency.getDependencies(selectedDir.getAbsolutePath());
+                DefaultDirectedWeightedGraph<DependencyObj, EdgeSettings> g1 = graphDraw.getGraphForDependencies(dependencyObjs);
+                ControllerFunctions.saveGraphImage(fileName, g1);
+                File imageFile1 = new File(System.getProperty("user.dir").toString() + "/src/main/resources/" + fileName + ".png");
+                Platform.runLater(() -> viewingInfo.setText(viewingInfoText));
 
-            //reset translations
-            imageLabel.getGraphicsContext2D().setTransform(1,0,0,1,0,0);
-            ControllerFunctions.loadingImage(imageFile1, imageLabel, this, gridPane);
-            screenCenter = new Point2D(imageLabel.getWidth()/2., imageLabel.getHeight()/2);
+                //reset translations
+                Platform.runLater(() -> imageLabel.getGraphicsContext2D().setTransform(1, 0, 0, 1, 0, 0));
+                ControllerFunctions.loadingImage(imageFile1, imageLabel, this, gridPane);
+                screenCenter = new Point2D(imageLabel.getWidth() / 2., imageLabel.getHeight() / 2);
+                return null;
+            });
         }
     }
 

@@ -4,6 +4,8 @@ import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.layout.mxIGraphLayout;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.util.mxCellRenderer;
+
+import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
@@ -69,14 +71,16 @@ public class ControllerFunctions {
 
     public static void loadingImage(File imageFile, Canvas imageLabel, Controller controller, GridPane gridPane){
         try {
-            Image image = convertToFxImage(ImageIO.read(imageFile));
-            if(controller.getImage() != null) {
-                imageLabel.getGraphicsContext2D().clearRect(0,0,controller.getImage().getWidth(), controller.getImage().getHeight());
-            }
-            controller.setImage(image);
-            imageLabel.getGraphicsContext2D().restore();
-            imageLabel.getGraphicsContext2D().setFill(Color.BLACK);
-            imageLabel.getGraphicsContext2D().drawImage(image, 0., 0.);
+            final Image image = convertToFxImage(ImageIO.read(imageFile));
+            Platform.runLater(()-> {
+                if (controller.getImage() != null) {
+                    imageLabel.getGraphicsContext2D().clearRect(0, 0, controller.getImage().getWidth(), controller.getImage().getHeight());
+                }
+                controller.setImage(image);
+                imageLabel.getGraphicsContext2D().restore();
+                imageLabel.getGraphicsContext2D().setFill(Color.BLACK);
+                imageLabel.getGraphicsContext2D().drawImage(image, 0., 0.);
+            });
         }catch (IOException e) {
             System.err.println("Blad odczytu obrazka");
             e.printStackTrace();
