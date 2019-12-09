@@ -8,6 +8,7 @@ import com.mxgraph.util.mxCellRenderer;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
@@ -25,6 +26,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -73,19 +75,40 @@ public class ControllerFunctions {
         try {
             final Image image = convertToFxImage(ImageIO.read(imageFile));
             Platform.runLater(()-> {
+                Image toRender = image;
+                boolean showWarningAboutResize = false;
+                //scale image if it is too big
+                if(toRender.getWidth() > 15000) {       //probably max supported image size
+                    try {
+                        toRender = new Image(imageFile.toURI().toURL().toString(), 15000, image.getHeight(), true, false);
+                        showWarningAboutResize = true;
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                }
                 if (controller.getImage() != null) {
                     imageLabel.getGraphicsContext2D().clearRect(0, 0, controller.getImage().getWidth(), controller.getImage().getHeight());
                 }
-                controller.setImage(image);
+                controller.setImage(toRender);
                 imageLabel.getGraphicsContext2D().restore();
                 imageLabel.getGraphicsContext2D().setFill(Color.BLACK);
-                imageLabel.getGraphicsContext2D().drawImage(image, 0., 0.);
+                imageLabel.getGraphicsContext2D().drawImage(toRender, 0., 0.);
+
+                //showing alert
+                if(showWarningAboutResize) {
+                    Alert popupWindow = new Alert(Alert.AlertType.WARNING,
+                            "Application do not support loading large images(up to 15k pixels wide/tall. " +
+                                    "If you want see proper quality image, open it with dedicated image viewer!",
+                            ButtonType.OK);
+                    popupWindow.showAndWait();
+                }
             });
         }catch (IOException e) {
             System.err.println("Blad odczytu obrazka");
             e.printStackTrace();
         }
     }
+
     public static void infoAlert() {
         Alert info = new Alert(Alert.AlertType.INFORMATION);
         info.setTitle("Info");
