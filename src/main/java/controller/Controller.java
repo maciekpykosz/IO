@@ -7,9 +7,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -145,6 +143,12 @@ public class Controller {
     public void exportToXML(ActionEvent actionEvent) {
         XMLCreator creator = new XMLCreator();
         List<DependencyObj> lastCreated = dependencyFinder.getLastCreatedDependencies();
+        if(lastCreated == null) {
+            Alert popup = new Alert(Alert.AlertType.ERROR,"No graph already loaded", ButtonType.OK);
+            popup.showAndWait();
+            return;
+        }
+
         creator.addClassesWithDependencies(lastCreated);
 
         FileChooser fileChooser = new FileChooser();
@@ -180,6 +184,14 @@ public class Controller {
         Label l = new Label("Choose your combination");
         Button b = new Button("OK");
         Button c = new Button("Clear");
+
+        //id's only for testing purpose
+        checkBoxFile.setId("combinationFileDep");
+        checkBoxMethod.setId("combinationMethodDep");
+        checkBoxPackage.setId("combinationPackageDep");
+        b.setId("combinationOkButton");
+        c.setId("combinationClearButton");
+
         secondaryLayout.getChildren().add(l);
         secondaryLayout.getChildren().add(checkBoxFile);
         secondaryLayout.getChildren().add(checkBoxMethod);
