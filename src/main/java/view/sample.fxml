@@ -20,7 +20,7 @@
     <children>
         <MenuBar GridPane.valignment="TOP">
             <menus>
-                <Menu mnemonicParsing="false" text="Dependencies">
+                <Menu fx:id="dependenciesMenu" mnemonicParsing="false" text="Dependencies">
                     <items>
                         <MenuItem fx:id="fileDepMenu" mnemonicParsing="false" onAction="#loadFileDep" text="File" />
                         <MenuItem fx:id="methodDepMenu" mnemonicParsing="false" onAction="#loadMethodDep" text="Method" />
