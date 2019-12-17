@@ -237,6 +237,8 @@ public class Controller {
     public void loadMethodDefinitions() {
         makeDependencies(absolutePath -> dependencyFinder.getMethodsDefinitions(absolutePath), fileNameForFourthGraph, "Showing method definitions");
     }
+    public void loadMethodPartitionDep(ActionEvent actionEvent) {
+        int partitionsCount = Integer.parseInt(((MenuItem) actionEvent.getSource()).getText());}
 
     public void closeApp(ActionEvent actionEvent) {
         Platform.exit();
