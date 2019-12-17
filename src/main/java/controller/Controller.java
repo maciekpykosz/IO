@@ -23,6 +23,8 @@ import model.dependency.DependencyObj;
 import model.GraphDraw;
 import model.GraphDraw.EdgeSettings;
 import model.export.XMLCreator;
+
+import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 
 import java.io.File;
@@ -30,9 +32,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class Controller {
     @FXML
@@ -237,8 +244,70 @@ public class Controller {
     public void loadMethodDefinitions() {
         makeDependencies(absolutePath -> dependencyFinder.getMethodsDefinitions(absolutePath), fileNameForFourthGraph, "Showing method definitions");
     }
+    public List<Set<DependencyObj>> findPartitions(int partitions, List<DependencyObj> dependencies) {
+        //finding solo vertex, take all childrens, and gets their parents
+        int part = 1;
+        List<DependencyObj> aloneVertexes = findAloneVertexes(dependencies);
+        List<DependencyObj> othersVertexes = new ArrayList<>(dependencies);
+        othersVertexes.removeAll(aloneVertexes);
+        if (aloneVertexes.size() > 0 && ++part == partitions) {
+            //return status for 2
+        }
+        List<Set<DependencyObj>> connectedGraphs = findConnectedGraphs(othersVertexes);
+        if ((part + connectedGraphs.size() - 1) > partitions) {
+            partitions -= aloneVertexes.size() > 0 ? 1 : 0;
+            connectedGraphs = mergeGroupsOfVertexes(connectedGraphs, partitions);
+        }
+        Set<DependencyObj> aloneSet = new HashSet<>(aloneVertexes);
+        connectedGraphs.add(aloneSet);
+        return connectedGraphs;
+    }
+
+    public List<DependencyObj> findAloneVertexes(List<DependencyObj> dependencies) {
+        List<DependencyObj> dependenciesWithoutFriends = new ArrayList<>();
+        for (DependencyObj dependency : dependencies) {
+            if (dependency.getDependencyList().size() == 0 && dependency.getWeight() == 0) {
+                dependenciesWithoutFriends.add(dependency);
+            }
+        }
+        for (DependencyObj dependency : dependencies) {
+            for (Map.Entry<DependencyObj, Integer> entry : dependency.getDependencyList().entrySet()) {
+                dependenciesWithoutFriends.remove(entry.getKey());
+            }
+        }
+        return dependenciesWithoutFriends;
+    }
+
+    public List<Set<DependencyObj>> findConnectedGraphs(List<DependencyObj> dependencies) {
+        DefaultDirectedWeightedGraph<DependencyObj, EdgeSettings> graph = graphDraw.getGraphForDependencies(dependencies);
+        ConnectivityInspector<DependencyObj, EdgeSettings> inspector = new ConnectivityInspector<>(graph);
+        List<Set<DependencyObj>> connectedVertexes = inspector.connectedSets();
+        return connectedVertexes;
+    }
+
+    public List<Set<DependencyObj>> mergeGroupsOfVertexes(List<Set<DependencyObj>> vertexesGroups, int partitions) {
+        int vertexesSize = vertexesGroups.size();
+        for (int i = 0; i < vertexesSize - partitions; i++) {
+            //sort
+            vertexesGroups.sort(Comparator.comparingInt(Set::size));
+            //merge
+            vertexesGroups.get(0).addAll(vertexesGroups.get(1));
+            vertexesGroups.remove(1);
+        }
+        return vertexesGroups;
+    }
+
     public void loadMethodPartitionDep(ActionEvent actionEvent) {
-        int partitionsCount = Integer.parseInt(((MenuItem) actionEvent.getSource()).getText());}
+        int partitionsCount = Integer.parseInt(((MenuItem) actionEvent.getSource()).getText());
+        ControllerFunctions.setDefaultDirector(directoryChooser);
+        File selectedDir = directoryChooser.showDialog(onCreatedStage);
+        if (selectedDir != null) {
+            List<DependencyObj> methodsDependencies = dependencyFinder.getMethodsDependencies(selectedDir.getAbsolutePath());
+            methodsDependencies = methodsDependencies.stream().distinct().collect(Collectors.toList());
+            List<Set<DependencyObj>> partitions = findPartitions(partitionsCount, methodsDependencies);
+            // TODO: 2019-12-17 Draw graph with frames for partitions
+        }
+    }
 
     public void closeApp(ActionEvent actionEvent) {
         Platform.exit();
