@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Project DocumentationType="html" ExporterVersion="12.2" Name="untitled" UmlVersion="2.x" Xml_structure="simple">
+  <Models>
+    <Class Id="1" Name="transfer"/>
+    <Class Id="2" Name="searchActors"/>
+    <Class Id="3" Name="getId"/>
+    <Class Id="4" Name="getTitle"/>
+    <Class Id="5" Name="getActors"/>
+    <Class Id="6" Name="toString"/>
+    <Class Id="7" Name="getActor"/>
+    <Class Id="8" Name="getActorMovies"/>
+    <Class Id="9" Name="getMovie"/>
+    <Class Id="10" Name="searchActor"/>
+    <Class Id="11" Name="setSearchActorsCallback"/>
+    <Class Id="12" Name="setRepository"/>
+    <Class Id="13" Name="searchFirstActor"/>
+    <Class Id="14" Name="searchSecondActor"/>
+    <Class Id="15" Name="SearchActors"/>
+    <Class Id="16" Name="setTextAreaCallback"/>
+    <Class Id="17" Name="setProgressBarCallback"/>
+    <Class Id="18" Name="setFindConnectionCallback"/>
+    <Class Id="19" Name="makeGraph"/>
+    <Class Id="20" Name="createDegree"/>
+    <Class Id="21" Name="addingLoop"/>
+    <Class Id="22" Name="checkMovies"/>
+    <Class Id="23" Name="findConnection"/>
+    <Class Id="24" Name="findShortestPath"/>
+    <Class Id="25" Name="equals"/>
+    <Class Id="26" Name="hashCode"/>
+    <Class Id="27" Name="getId"/>
+    <Class Id="28" Name="getName"/>
+    <Class Id="29" Name="getMovies"/>
+    <Class Id="30" Name="setMovies"/>
+    <Class Id="31" Name="toString"/>
+    <Class Id="32" Name="call"/>
+    <Class Id="33" Name="call"/>
+    <Class Id="34" Name="getActor"/>
+    <Class Id="35" Name="getActorMovies"/>
+    <Class Id="36" Name="getMovie"/>
+    <Class Id="37" Name="searchActor"/>
+    <Class Id="38" Name="getActor"/>
+    <Class Id="39" Name="getActorMovies"/>
+    <Class Id="40" Name="getMovie"/>
+    <Class Id="41" Name="searchActor"/>
+    <Class Id="42" Name="createGraphRepresentation"/>
+    <Class Id="43" Name="initialize"/>
+    <Class Id="44" Name="searchByName"/>
+    <Class Id="45" Name="searchById"/>
+    <Class Id="46" Name="setProgress"/>
+    <Class Id="47" Name="start"/>
+    <Class Id="48" Name="main"/>
+    <Class Id="49" Name="addString"/>
+    <Usage From="1" Id="119" To="44"/>
+    <Usage From="1" Id="120" To="45"/>
+    <Usage From="2" Id="121" To="15"/>
+    <Usage From="3" Id="122" To="10"/>
+    <Usage From="3" Id="123" To="21"/>
+    <Usage From="3" Id="124" To="22"/>
+    <Usage From="3" Id="125" To="9"/>
+    <Usage From="3" Id="126" To="8"/>
+    <Usage From="3" Id="127" To="23"/>
+    <Usage From="3" Id="128" To="7"/>
+    <Usage From="4" Id="129" To="1"/>
+    <Usage From="5" Id="130" To="21"/>
+    <Usage From="5" Id="131" To="8"/>
+    <Usage From="5" Id="132" To="23"/>
+    <Usage From="7" Id="133" To="32"/>
+    <Usage From="8" Id="134" To="22"/>
+    <Usage From="9" Id="135" To="21"/>
+    <Usage From="9" Id="136" To="23"/>
+    <Usage From="10" Id="137" To="32"/>
+    <Usage From="11" Id="138" To="44"/>
+    <Usage From="12" Id="139" To="44"/>
+    <Usage From="16" Id="140" To="32"/>
+    <Usage From="17" Id="141" To="32"/>
+    <Usage From="18" Id="142" To="32"/>
+    <Usage From="19" Id="143" To="32"/>
+    <Usage From="20" Id="144" To="19"/>
+    <Usage From="21" Id="145" To="20"/>
+    <Usage From="22" Id="146" To="19"/>
+    <Usage From="22" Id="147" To="20"/>
+    <Usage From="23" Id="148" To="19"/>
+    <Usage From="23" Id="149" To="20"/>
+    <Usage From="24" Id="150" To="23"/>
+    <Usage From="25" Id="151" To="10"/>
+    <Usage From="25" Id="152" To="21"/>
+    <Usage From="25" Id="153" To="9"/>
+    <Usage From="25" Id="154" To="8"/>
+    <Usage From="25" Id="155" To="23"/>
+    <Usage From="25" Id="156" To="7"/>
+    <Usage From="27" Id="157" To="10"/>
+    <Usage From="27" Id="158" To="21"/>
+    <Usage From="27" Id="159" To="22"/>
+    <Usage From="27" Id="160" To="9"/>
+    <Usage From="27" Id="161" To="8"/>
+    <Usage From="27" Id="162" To="23"/>
+    <Usage From="27" Id="163" To="7"/>
+    <Usage From="28" Id="164" To="1"/>
+    <Usage From="28" Id="165" To="19"/>
+    <Usage From="29" Id="166" To="21"/>
+    <Usage From="30" Id="167" To="22"/>
+    <Usage From="34" Id="168" To="32"/>
+    <Usage From="35" Id="169" To="22"/>
+    <Usage From="36" Id="170" To="21"/>
+    <Usage From="36" Id="171" To="23"/>
+    <Usage From="37" Id="172" To="32"/>
+    <Usage From="38" Id="173" To="32"/>
+    <Usage From="39" Id="174" To="22"/>
+    <Usage From="40" Id="175" To="21"/>
+    <Usage From="40" Id="176" To="23"/>
+    <Usage From="41" Id="177" To="32"/>
+    <Usage From="42" Id="178" To="24"/>
+    <Usage From="46" Id="179" To="24"/>
+    <Usage From="46" Id="180" To="23"/>
+    <Usage From="46" Id="181" To="20"/>
+    <Usage From="47" Id="182" To="44"/>
+    <Usage From="47" Id="183" To="45"/>
+    <Usage From="47" Id="184" To="14"/>
+    <Usage From="47" Id="185" To="13"/>
+    <Usage From="49" Id="186" To="19"/>
+    <Usage From="49" Id="187" To="20"/>
+  </Models>
+</Project>
