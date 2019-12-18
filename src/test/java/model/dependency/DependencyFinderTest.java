@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import java.util.LinkedList;
 import java.util.List;
 
+import model.GraphDraw;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class DependencyFinderTest {
@@ -12,7 +14,19 @@ class DependencyFinderTest {
     private DependencyFinder dependencyFinder = new DependencyFinder();
     private List<DependencyObj> methodDependencies = dependencyFinder.getMethodsDependencies(TEST_FOLDER_PATH);
     private List<DependencyObj> fileDependencies = dependencyFinder.getFilesDependencies(TEST_FOLDER_PATH);
+    private List<DependencyObj> moduleDependencies = dependencyFinder.getModuleDependencies(TEST_FOLDER_PATH);
 
+    @Test
+    void getLastCreatedDependencies_shouldReturnNullObject(){
+        DependencyFinder dependencyFinder = new DependencyFinder();
+        assertEquals(dependencyFinder.getLastCreatedDependencies(), null);
+    }
+
+    @Test
+    void getLastCreatedDependencies_shouldReturnList(){
+        List<DependencyObj> lastCreatedDependencies = dependencyFinder.getLastCreatedDependencies();
+        assertTrue(lastCreatedDependencies.size() > 0);
+    }
     @Test
     void getMethodsDependencies_shouldReturnNotEmptyObject() {
         assertFalse(methodDependencies.isEmpty());
@@ -45,5 +59,21 @@ class DependencyFinderTest {
             assertTrue(depObj instanceof FileDependency );
     }
 
+    @Test
+    void getModuleDependencies_shouldReturnNotEmptyObject(){
+        assertFalse(moduleDependencies.isEmpty());
+    }
+
+    @Test
+    void getModuleDependencies_shouldReturnALinkedList(){
+        assertTrue(LinkedList.class.isAssignableFrom(moduleDependencies.getClass()));
+    }
+
+    @Test
+    void getModuleDependencies_shouldSayThatDependencyObjIsInstanceOfModuleDependency(){
+        for (DependencyObj moduleDependency : moduleDependencies) {
+            assertTrue(moduleDependency instanceof ModuleDependency);
+        }
+    }
 
 }
