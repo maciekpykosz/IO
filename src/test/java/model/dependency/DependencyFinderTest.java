@@ -15,6 +15,8 @@ class DependencyFinderTest {
     private List<DependencyObj> methodDependencies = dependencyFinder.getMethodsDependencies(TEST_FOLDER_PATH);
     private List<DependencyObj> fileDependencies = dependencyFinder.getFilesDependencies(TEST_FOLDER_PATH);
     private List<DependencyObj> moduleDependencies = dependencyFinder.getModuleDependencies(TEST_FOLDER_PATH);
+    private List<DependencyObj> methodeDefinitions = dependencyFinder.getMethodsDefinitions(TEST_FOLDER_PATH);
+    private List<DependencyObj> methodeDefinitions2 = dependencyFinder.getMethodsDefinitions("");
 
     @Test
     void getLastCreatedDependencies_shouldReturnNullObject(){
@@ -76,4 +78,15 @@ class DependencyFinderTest {
         }
     }
 
+    @Test
+    void getMethodsDefinitions_shouldNotReturnEmptyList() {
+        assertFalse(methodeDefinitions.isEmpty());
+    }
+    //podanie sciezki (folder zawierajacy pliki java*) metoda ma zwracac liste nie pusta!
+
+    @Test
+    void getMethodsDefinitions_shouldReturnEmptyList() {
+        assertTrue(methodeDefinitions2.isEmpty());
+    }
+    //podanie pustej sciezki (folder nie zawierajacy plikow java*) metoda ma zwracac pusta liste
 }
