@@ -10,6 +10,7 @@ import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.SimpleName;
 import com.github.javaparser.utils.SourceRoot;
+import model.CyclomaticComplexityCalculator;
 
 import java.nio.file.Paths;
 import java.util.*;
@@ -102,6 +103,9 @@ public class DependencyFinder {
                     if (member.isMethodDeclaration()) {
                         MethodDeclaration method = (MethodDeclaration) member;
                         DependencyObj methodDependency = new MethodDependency(method.getNameAsString());
+                        CyclomaticComplexityCalculator cyclomaticComplexity = new CyclomaticComplexityCalculator();
+                        int cc = cyclomaticComplexity.computeComplexityForMethod(method);
+                        methodDependency.setCyclomaticComplexity(cc);
                         dependenciesList.add(methodDependency);
                         methodsList.add(method);
                     }
@@ -116,15 +120,15 @@ public class DependencyFinder {
                     dependencyObj.addDependency(dependenciesList.get(tempIndex));
                 }*/
                 int dependenciesNum = method.findAll(MethodCallExpr.class, (v) ->
-                        ( v.getName().asString().equals(dependencyObj.getName()) &&
+                        (v.getName().asString().equals(dependencyObj.getName()) &&
                                 !method.getNameAsString().equals(dependencyObj.getName()))
                 ).size();
 
-                if(dependenciesNum > 0) {
+                if (dependenciesNum > 0) {
                     int dependencyIndex = dependenciesList.indexOf(new MethodDependency(method.getNameAsString()));
                     DependencyObj temp = dependenciesList.get(dependencyIndex);
 
-                    if(dependencyObj.getDependencyList().computeIfPresent(temp, (k, v) -> v + dependenciesNum) == null) {
+                    if (dependencyObj.getDependencyList().computeIfPresent(temp, (k, v) -> v + dependenciesNum) == null) {
                         dependencyObj.getDependencyList().put(temp, dependenciesNum);
                     }
 
@@ -163,6 +167,10 @@ public class DependencyFinder {
                     .stream()
                     .map((method) -> {
                         DependencyObj temp = new ModuleDependency(method.getNameAsString() + "\n" + packageName);
+                        //todo: comupting CC like below
+                        //CyclomaticComplexity cyclomaticComplexity = new CyclomaticComplexity();
+                        //int cc = cyclomaticComplexity.computeComplexityForMethod(method);
+                        //temp.setCyclomaticComplexity(cc);
                         return temp;
                     })
                     .collect(Collectors.toList());
@@ -268,22 +276,25 @@ public class DependencyFinder {
         return moduleDependencies;
     }
 
-    public List<DependencyObj> getMethodsDefinitions(String absolutePath){
+    public List<DependencyObj> getMethodsDefinitions(String absolutePath) {
         List<DependencyObj> methodDefinitions = new LinkedList<>();
         SourceRoot root = new SourceRoot(Paths.get(absolutePath));
         List<ParseResult<CompilationUnit>> resultList = root.tryToParseParallelized();
 
         List<Optional<CompilationUnit>> compilationList =
                 resultList.stream().map(ParseResult::getResult).collect(Collectors.toList());
-        for(Optional<CompilationUnit> result : compilationList) {
-            if(!result.isPresent()) continue; //skip empty object
-            for(TypeDeclaration typeDec : result.get().getTypes()) {
+        for (Optional<CompilationUnit> result : compilationList) {
+            if (!result.isPresent()) continue; //skip empty object
+            for (TypeDeclaration typeDec : result.get().getTypes()) {
                 DependencyObj classObject = new MethodDefinitionDependency(typeDec.getNameAsString());
                 List<BodyDeclaration> bodyDeclarations = typeDec.getMembers();
                 for (BodyDeclaration bodyDeclaration : bodyDeclarations) {
-                    if (bodyDeclaration.isMethodDeclaration()){
+                    if (bodyDeclaration.isMethodDeclaration()) {
                         MethodDeclaration method = (MethodDeclaration) bodyDeclaration;
-                        DependencyObj methodDefinition = new MethodDefinitionDependency(method.getNameAsString());
+                        MethodDefinitionDependency methodDefinition = new MethodDefinitionDependency(method.getNameAsString());
+                        CyclomaticComplexityCalculator cyclomaticComplexity = new CyclomaticComplexityCalculator();
+                        Integer cc = cyclomaticComplexity.computeComplexityForMethod(method);
+                        methodDefinition.setCyclomaticComplexity(cc);
                         classObject.addDependency(methodDefinition);
                     }
                 }
