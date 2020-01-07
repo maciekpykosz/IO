@@ -12,6 +12,7 @@ public class DependencyObj {
     protected Integer weight = 0;  // Current object weight
     protected String edgeStyle = "";
     protected HashMap<DependencyObj, Integer> dependencyList = new HashMap<>(); // dependencyObject with edge weight
+    protected Integer cyclomaticComplexity = null;
 
     public DependencyObj(String name) {
         this.name = name;
@@ -68,9 +69,17 @@ public class DependencyObj {
         }
     }
 
+    public void setCyclomaticComplexity(Integer cyclomaticComplexity) {
+        this.cyclomaticComplexity = cyclomaticComplexity;
+    }
+
     @Override
     public String toString() {
-        return this.name + "\n" + this.weight;
+        if (cyclomaticComplexity != null) {
+            return this.name + "\n" + this.weight + "\nCC: " + cyclomaticComplexity;
+        } else {
+            return this.name + "\n" + this.weight;
+        }
     }
 
     @Override //containsKey basing on this method, so i need to compare 2 obj based on name

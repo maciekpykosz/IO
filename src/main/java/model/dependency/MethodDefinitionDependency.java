@@ -7,6 +7,10 @@ public class MethodDefinitionDependency extends DependencyObj{
 
     @Override
     public String toString() {
-        return this.name;
+        if (cyclomaticComplexity != null) {
+            return this.name + "\nCC: " + cyclomaticComplexity;
+        } else {
+            return this.name;
+        }
     }
 }
