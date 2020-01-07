@@ -19,6 +19,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import model.dependency.DependencyObj;
 import model.GraphDraw.EdgeSettings;
+import model.dependency.GroupDependency;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 
@@ -39,12 +40,51 @@ public class ControllerFunctions {
             e.printStackTrace();
         }
 
+        //code to define groups in separating graphs
+        //defining group vertices
+        List<GroupDependency> groups = new LinkedList<>();
+        int maxGroupNum = g.vertexSet().stream().map(DependencyObj::getGroupId).max(Integer::compareTo).get();
+        if(maxGroupNum != -1) {
+            for(int i=0; i<=maxGroupNum; ++i) {
+                GroupDependency group = new GroupDependency("Group");
+                group.setWeight(i);
+                groups.add(group);
+                g.addVertex(group);
+            }
+        }
+
         JGraphXAdapter<DependencyObj, EdgeSettings> graphAdapter = new JGraphXAdapter<>(g);
         mxIGraphLayout layout = new mxHierarchicalLayout(graphAdapter);
-
         for(Map.Entry<DependencyObj, mxICell> iter : graphAdapter.getVertexToCellMap().entrySet()) {
             iter.getValue().setStyle(iter.getKey().getStyle());
         }
+
+        //adding vertex to groups
+        if(maxGroupNum != -1) {
+            Map<Integer, List<mxICell>> vertexPerGroupId = new HashMap<>();
+
+            //grouping vertex per groupId
+            for(Map.Entry<DependencyObj, mxICell> iter : graphAdapter.getVertexToCellMap().entrySet()) {
+                if(iter.getKey().getGroupId() == -1) continue;
+                Integer vertexGroupId = iter.getKey().getGroupId();
+
+                if(vertexPerGroupId.containsKey(vertexGroupId)) {
+                    vertexPerGroupId.get(vertexGroupId).add(iter.getValue());
+                } else {
+                    List<mxICell> listOfCells = new LinkedList<>();
+                    listOfCells.add(iter.getValue());
+                    vertexPerGroupId.put(vertexGroupId, listOfCells);
+                }
+            }
+
+            //creating groups in graph
+            for(GroupDependency group : groups) {
+                mxICell groupCell = graphAdapter.getVertexToCellMap().get(group);
+                Object[] groupVertex = vertexPerGroupId.get(group.getWeight()).toArray();
+                graphAdapter.groupCells(groupCell, 0, groupVertex);
+            }
+        }
+
         layout.execute(graphAdapter.getDefaultParent());
 
         BufferedImage image = mxCellRenderer.createBufferedImage(graphAdapter, null, 2, java.awt.Color.WHITE , true, null);

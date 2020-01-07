@@ -31,13 +31,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -306,6 +300,16 @@ public class Controller {
             methodsDependencies = methodsDependencies.stream().distinct().collect(Collectors.toList());
             List<Set<DependencyObj>> partitions = findPartitions(partitionsCount, methodsDependencies);
             // TODO: 2019-12-17 Draw graph with frames for partitions
+            List<DependencyObj> partitionedGraphElements = new LinkedList<>();
+            for(int i=0; i<partitions.size(); ++i){
+                Set<DependencyObj> subPartition = partitions.get(i);
+                int finalI = i;
+                subPartition.forEach(depObj -> {
+                    depObj.setGroupId(finalI);
+                    partitionedGraphElements.add(depObj);
+                });
+            }
+            ControllerFunctions.saveGraphImage("partitioned", graphDraw.getGraphForDependencies(partitionedGraphElements));
         }
     }
 

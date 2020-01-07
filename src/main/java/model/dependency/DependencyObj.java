@@ -9,6 +9,7 @@ public class DependencyObj {
     protected static Integer ids = 1;
     protected Integer id;
     protected String name;
+    protected int groupId = -1;     //for making groups in methods
     protected Integer weight = 0;  // Current object weight
     protected String edgeStyle = "";
     protected HashMap<DependencyObj, Integer> dependencyList = new HashMap<>(); // dependencyObject with edge weight
@@ -101,5 +102,13 @@ public class DependencyObj {
 
     public void setStyle(String style) {
         this.edgeStyle = style;
+    }
+
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
     }
 }
