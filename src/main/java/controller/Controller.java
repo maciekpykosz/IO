@@ -24,13 +24,13 @@ import model.GraphDraw;
 import model.GraphDraw.EdgeSettings;
 import model.export.XMLCreator;
 
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -113,6 +113,20 @@ public class Controller {
         if (selectedDir != null) {
             CompletableFuture.supplyAsync(()-> {
                 List<DependencyObj> dependencyObjs = loadDependency.getDependencies(selectedDir.getAbsolutePath());
+                File gitDirectory = new File(selectedDir.getAbsolutePath() + "/.git");
+                String version = "unknown";
+                if (gitDirectory.exists()) {
+                    try {
+                        Repository repo = new FileRepositoryBuilder()
+                                .setGitDir(gitDirectory)
+                                .build();
+                        ObjectId head = repo.resolve("HEAD");
+                        version = head.getName();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                System.out.println(version);
                 DefaultDirectedWeightedGraph<DependencyObj, EdgeSettings> g1 = graphDraw.getGraphForDependencies(dependencyObjs);
                 ControllerFunctions.saveGraphImage(fileName, g1);
                 File imageFile1 = new File(System.getProperty("user.dir").toString() + "/src/main/resources/" + fileName + ".png");
