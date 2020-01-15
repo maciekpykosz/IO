@@ -14,25 +14,32 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
 import model.dependency.DependencyObj;
 import model.GraphDraw.EdgeSettings;
 import model.dependency.GroupDependency;
+
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 
 import javax.imageio.ImageIO;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ControllerFunctions {
-    public static void saveGraphImage(String imageName, DefaultDirectedWeightedGraph<DependencyObj, EdgeSettings> g){
+    public static void saveGraphImage(String imageName, DefaultDirectedWeightedGraph<DependencyObj, EdgeSettings> g, String hash){
         File imgFile = new File(System.getProperty("user.dir").toString() + "/src/main/resources/" + imageName + ".png");
         try {
             imgFile.createNewFile();
@@ -93,6 +100,8 @@ public class ControllerFunctions {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        mergeFiles(imgFile, hash);
     }
 
     //converting bufferedImage to image in javaFX in Java8
@@ -131,7 +140,7 @@ public class ControllerFunctions {
                 }
                 controller.setImage(toRender);
                 imageLabel.getGraphicsContext2D().restore();
-                imageLabel.getGraphicsContext2D().setFill(Color.BLACK);
+                imageLabel.getGraphicsContext2D().setFill(javafx.scene.paint.Color.BLACK);
                 imageLabel.getGraphicsContext2D().drawImage(toRender, 0., 0.);
 
                 //showing alert
@@ -216,5 +225,58 @@ public class ControllerFunctions {
         mergedDep.addAll(packetDep);
 
         return mergedDep;
+    }
+
+    private static final String hashPath = System.getProperty("user.dir").toString() + "/src/main/resources/hash.png";
+
+    private static void mergeFiles(File pngFile, String hash) {
+        try {
+            BufferedImage graphFile = ImageIO.read(pngFile);
+            BufferedImage hashFile = createHashFile(hash);
+            int width = Math.max(graphFile.getWidth(), hashFile.getWidth());
+            int height = Math.max(graphFile.getHeight(), hashFile.getHeight());
+            BufferedImage combinedFile = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+            Graphics graphics = combinedFile.getGraphics();
+            int hashPositionX = width - hashFile.getWidth();
+            int hashPositionY = height - hashFile.getHeight();
+            graphics.drawImage(graphFile, 0, 0, null);
+            graphics.drawImage(hashFile, hashPositionX, hashPositionY, null);
+            ImageIO.write(combinedFile, "PNG", pngFile);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private static BufferedImage createHashFile(String hash) {
+        final int width = 300;
+        final int height = 15;
+        BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = bi.createGraphics();
+        Font font = new Font("TimesRoman", Font.BOLD, 12);
+        graphics.setFont(font);
+        FontMetrics fontMetrics = graphics.getFontMetrics();
+        int stringWidth = fontMetrics.stringWidth(hash);
+        int stringHeight = fontMetrics.getAscent();
+        graphics.setPaint(Color.BLACK);
+        graphics.drawString(hash, (width - stringWidth) / 2, height / 2 + stringHeight / 4);
+        return bi;
+    }
+
+    public static String getHashFromRepository(String repoPath){
+        File gitDirectory = new File(repoPath + "/.git");
+        String version = "unknown";
+        if (gitDirectory.exists()) {
+            try {
+                Repository repo = new FileRepositoryBuilder()
+                        .setGitDir(gitDirectory)
+                        .build();
+                ObjectId head = repo.resolve("HEAD");
+                version = head.getName();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return version;
     }
 }

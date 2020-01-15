@@ -113,22 +113,10 @@ public class Controller {
         if (selectedDir != null) {
             CompletableFuture.supplyAsync(()-> {
                 List<DependencyObj> dependencyObjs = loadDependency.getDependencies(selectedDir.getAbsolutePath());
-                File gitDirectory = new File(selectedDir.getAbsolutePath() + "/.git");
-                String version = "unknown";
-                if (gitDirectory.exists()) {
-                    try {
-                        Repository repo = new FileRepositoryBuilder()
-                                .setGitDir(gitDirectory)
-                                .build();
-                        ObjectId head = repo.resolve("HEAD");
-                        version = head.getName();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                System.out.println(version);
+
+                String version = ControllerFunctions.getHashFromRepository(selectedDir.getAbsolutePath());
                 DefaultDirectedWeightedGraph<DependencyObj, EdgeSettings> g1 = graphDraw.getGraphForDependencies(dependencyObjs);
-                ControllerFunctions.saveGraphImage(fileName, g1);
+                ControllerFunctions.saveGraphImage(fileName, g1, version);
                 File imageFile1 = new File(System.getProperty("user.dir").toString() + "/src/main/resources/" + fileName + ".png");
                 Platform.runLater(() -> viewingInfo.setText(viewingInfoText));
 
@@ -147,8 +135,8 @@ public class Controller {
 
     public void loadMethodDep(ActionEvent actionEvent) {
         makeDependencies(absolutePath ->
-            dependencyFinder.getMethodsDependencies(absolutePath)
-        , fileNameForSecondGraph, "Showing method dependencies");
+                        dependencyFinder.getMethodsDependencies(absolutePath)
+                , fileNameForSecondGraph, "Showing method dependencies");
     }
 
     public void loadPackageDep(ActionEvent actionEvent) {
@@ -310,6 +298,7 @@ public class Controller {
         ControllerFunctions.setDefaultDirector(directoryChooser);
         File selectedDir = directoryChooser.showDialog(onCreatedStage);
         if (selectedDir != null) {
+            String version = ControllerFunctions.getHashFromRepository(selectedDir.getAbsolutePath());
             List<DependencyObj> methodsDependencies = dependencyFinder.getMethodsDependencies(selectedDir.getAbsolutePath());
             methodsDependencies = methodsDependencies.stream().distinct().collect(Collectors.toList());
             List<Set<DependencyObj>> partitions = findPartitions(partitionsCount, methodsDependencies);
@@ -323,7 +312,7 @@ public class Controller {
                     partitionedGraphElements.add(depObj);
                 });
             }
-            ControllerFunctions.saveGraphImage("partitioned", graphDraw.getGraphForDependencies(partitionedGraphElements));
+            ControllerFunctions.saveGraphImage("partitioned", graphDraw.getGraphForDependencies(partitionedGraphElements), version);
         }
     }
 
