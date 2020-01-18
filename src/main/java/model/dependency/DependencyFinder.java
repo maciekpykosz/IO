@@ -3,6 +3,7 @@ package model.dependency;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.Range;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
@@ -162,15 +163,16 @@ public class DependencyFinder {
             PackageDeclaration classPackage = classFile.getPackageDeclaration().get();
             String packageName = classPackage.getNameAsString();
 
+
             List<DependencyObj> allClassMethods = classFile
                     .findAll(MethodDeclaration.class)
                     .stream()
                     .map((method) -> {
                         DependencyObj temp = new ModuleDependency(method.getNameAsString() + "\n" + packageName);
-                        //todo: comupting CC like below
-                        //CyclomaticComplexity cyclomaticComplexity = new CyclomaticComplexity();
-                        //int cc = cyclomaticComplexity.computeComplexityForMethod(method);
-                        //temp.setCyclomaticComplexity(cc);
+                        //calculating cc
+                        CyclomaticComplexityCalculator cyclomaticComplexity = new CyclomaticComplexityCalculator();
+                        int cc = cyclomaticComplexity.computeComplexityForMethod(method);
+                        temp.setCyclomaticComplexity(cc);
                         return temp;
                     })
                     .collect(Collectors.toList());
@@ -179,7 +181,9 @@ public class DependencyFinder {
             //adding package and methods to packagesMethods
             if(packagesMethods.computeIfPresent(classPackage, (k, v) -> {
                 v.addAll(allClassMethods);
-                return v;}) == null) {
+                return v;}) == null)    //if package exists add all methods to defined package
+            {
+                //compute if package not exists
                 packagesMethods.put(classPackage, new HashSet<>(allClassMethods));
             }
 
@@ -200,8 +204,8 @@ public class DependencyFinder {
             if(!optionalClassPackage.isPresent()) continue;
             String classPackageName = classFile.getPackageDeclaration().get().getNameAsString();
 
-
-            List <PackageDeclaration> usedPackages = classFile.getImports()
+            //getting packages used in class file(only from source root)
+            List <PackageDeclaration> usedKnownPackages = classFile.getImports()
                     .stream()
                     .map((importDec) -> packagesMethods
                             .keySet()
@@ -212,66 +216,74 @@ public class DependencyFinder {
                     .map(Optional::get)
                     .collect(Collectors.toList());
 
-            if(usedPackages.isEmpty()) continue;   //skip if doesnt use foreign packages
-            List<MethodCallExpr> allMethodCalls = classFile.findAll(MethodCallExpr.class
-                    ,(method) -> method.getScope().isPresent());  //method called without object skipped
+            if(usedKnownPackages.isEmpty()) continue;   //skip when there isn't known packages
+            //getting all class methods
+            List<MethodDeclaration> allClassMethods = classFile.findAll(MethodDeclaration.class);
 
             //connecting nodes
-            for(MethodCallExpr methodCall : allMethodCalls) {
-                for(PackageDeclaration importDec : usedPackages) {
-                    //searching methods
-                    String searchingMethodName = methodCall.getNameAsString() + "\n" + importDec.getNameAsString();
-                    Optional<DependencyObj> foundMethodCount = packagesMethods.get(importDec)
-                            .stream()
-                            .filter(k -> k.getName().equals(searchingMethodName))
-                            .findAny();
+            for(MethodDeclaration methodBody : allClassMethods) {
+                List<MethodCallExpr> allMethodCalls = methodBody.findAll(MethodCallExpr.class,
+                        (method) -> method.getScope().isPresent());     //method called without object skipped
 
-                    if(!foundMethodCount.isPresent()) continue; //skip empty
+                for (MethodCallExpr methodCall : allMethodCalls) {
+                    for (PackageDeclaration importDec : usedKnownPackages) {
+                        //searching methods
+                        String searchingMethodName = methodCall.getNameAsString() + "\n" + importDec.getNameAsString();
+                        Optional<DependencyObj> foundMethodCount = packagesMethods.get(importDec)
+                                .stream()
+                                .filter(k -> k.getName().equals(searchingMethodName))
+                                .findAny();
 
-                    //manage connection A -> Packet_A, Packet_A -> Packet_B, Packet_B -> B
-                    DependencyObj objA = new ModuleDependency(searchingMethodName);
-                    DependencyObj packetA = moduleDependencies.get(moduleDependencies.indexOf(
-                            new ModuleDependency(importDec.getNameAsString())));
-                    DependencyObj packetB = moduleDependencies.get(moduleDependencies.indexOf(
-                            new ModuleDependency(classPackageName)));
-                    DependencyObj objB = new ModuleDependency(methodCall.getNameAsString() + "\n" + classPackageName);
+                        if (!foundMethodCount.isPresent()) continue; //skip empty
 
-                    //connection A -> Package_A
-                    int aIndexInList = moduleDependencies.indexOf(objA);
-                    if(aIndexInList < 0) {
-                        objA.setWeight(1);
-                        objA.getDependencyList().put(packetA, 1);
-                        moduleDependencies.add(objA);
-                    } else {
-                        objA = moduleDependencies.get(aIndexInList);
-                        if(objA.getDependencyList().computeIfPresent(packetA, (k, v) -> v + 1) == null) {
+                        //manage connection A -> Packet_A, Packet_A -> Packet_B, Packet_B -> B
+                        DependencyObj objA = foundMethodCount.get();
+                        DependencyObj packetA = moduleDependencies.get(moduleDependencies.indexOf(
+                                new ModuleDependency(importDec.getNameAsString())));
+                        DependencyObj packetB = moduleDependencies.get(moduleDependencies.indexOf(
+                                new ModuleDependency(classPackageName)));
+                        DependencyObj objB = new ModuleDependency(methodBody.getNameAsString() + "\n" + classPackageName);
+                        CyclomaticComplexityCalculator calculator = new CyclomaticComplexityCalculator();
+                        objB.setCyclomaticComplexity(calculator.computeComplexityForMethod(methodBody));
+
+                        //connection A -> Package_A
+                        int aIndexInList = moduleDependencies.indexOf(objA);
+                        if (aIndexInList < 0) {
+                            objA.setWeight(1);
                             objA.getDependencyList().put(packetA, 1);
+                            moduleDependencies.add(objA);
+                        } else {
+                            objA = moduleDependencies.get(aIndexInList);
+                            if (objA.getDependencyList().computeIfPresent(packetA, (k, v) -> v + 1) == null) {
+                                objA.getDependencyList().put(packetA, 1);
+                            }
+                            objA.setWeight(objA.getWeight() + 1);
                         }
-                        objA.setWeight(objA.getWeight() + 1);
-                    }
 
-                    //connection Package_A -> Package_B
-                    if(packetA.getDependencyList().computeIfPresent(packetB, (k, v) -> v + 1) == null) {
-                        packetA.getDependencyList().put(packetB, 1);
-                    }
-                    packetA.setWeight(packetA.getWeight() + 1);
+                        //connection Package_A -> Package_B
+                        if (packetA.getDependencyList().computeIfPresent(packetB, (k, v) -> v + 1) == null) {
+                            packetA.getDependencyList().put(packetB, 1);
+                        }
+                        packetA.setWeight(packetA.getWeight() + 1);
 
-                    //connection Package_B -> B
-                    int bIndexInList = moduleDependencies.indexOf(objB);
-                    if(bIndexInList < 0) {
-                        objB.setWeight(0);
-                        packetB.getDependencyList().put(objB, 1);
-                        moduleDependencies.add(objB);
-                    } else {
-                        objB = moduleDependencies.get(bIndexInList);
-                        if(packetB.getDependencyList().computeIfPresent(objB, (k, v) -> v + 1) == null) {
+                        //connection Package_B -> B
+                        int bIndexInList = moduleDependencies.indexOf(objB);
+                        if (bIndexInList < 0) {
+                            objB.setWeight(0);
                             packetB.getDependencyList().put(objB, 1);
+                            moduleDependencies.add(objB);
+                        } else {
+                            objB = moduleDependencies.get(bIndexInList);
+                            if (packetB.getDependencyList().computeIfPresent(objB, (k, v) -> v + 1) == null) {
+                                packetB.getDependencyList().put(objB, 1);
+                            }
                         }
-                    }
 
+                    }
                 }
             }
         }
+
         lastCreatedDependencies = moduleDependencies;
         return moduleDependencies;
     }
