@@ -53,6 +53,10 @@ public class DependencyObj {
         this.dependencyList = dependencyList;
     }
 
+    public void addModifierToName(String modifier){
+        name += "\n" + modifier;
+    }
+
     public void addDependency(DependencyObj dependencyObj) {
         if (dependencyList.containsKey(dependencyObj)) {
             dependencyList.put(dependencyObj, (dependencyList.get(dependencyObj) + 1));

@@ -17,11 +17,17 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import model.dependency.DependencyObj;
 import model.GraphDraw.EdgeSettings;
+import model.dependency.Difference;
 import model.dependency.GroupDependency;
 
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 
@@ -278,5 +284,62 @@ public class ControllerFunctions {
             }
         }
         return version;
+    }
+
+    public static List<Difference> getDiffFromCommits(String repoPath) {
+        File gitRepo = new File(repoPath + "/.git");
+        try {
+            Repository repo = new FileRepositoryBuilder()
+                    .setGitDir(gitRepo)
+                    .build();
+            ObjectId oldHead = repo.resolve("HEAD~1^{tree}");
+            ObjectId head = repo.resolve("HEAD^{tree}");
+
+            //System.out.println("Printing diff between tree: " + oldHead + " and " + head);
+
+            // prepare the two iterators to compute the diff between
+            ObjectReader reader = repo.newObjectReader();
+            CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+            oldTreeIter.reset(reader, oldHead);
+            CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+            newTreeIter.reset(reader, head);
+
+            // finally get the list of changed files
+
+            Git git = new Git(repo);
+            List<DiffEntry> diffs = git.diff()
+                    .setNewTree(newTreeIter)
+                    .setOldTree(oldTreeIter)
+                    .call();
+            return getDifferenceList(diffs);
+        } catch (IOException | GitAPIException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static List<Difference> getDifferenceList(List<DiffEntry> diffEntries) {
+        List<Difference> differences = new ArrayList<>();
+        for (DiffEntry diffEntry : diffEntries) {
+            String modifier = diffEntry.getChangeType().toString();
+            String[] filePath = diffEntry.getNewPath().split("/");
+            String[] fileName = filePath[filePath.length - 1].split("\\.");
+            if (fileName[1].equals("java")) {
+                Difference difference = new Difference(modifier, fileName[0]);
+                differences.add(difference);
+            }
+        }
+        return differences;
+    }
+
+    public static List<DependencyObj> addModifiers(List<DependencyObj> dependencies, List<Difference> differences){
+        for (DependencyObj dependency : dependencies) {
+            for (Difference difference : differences) {
+                if (dependency.getName().equals(difference.getFileName())){
+                    dependency.addModifierToName(difference.getModifier());
+                }
+            }
+        }
+        return dependencies;
     }
 }

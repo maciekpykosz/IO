@@ -22,6 +22,7 @@ import model.dependency.DependencyFinder;
 import model.dependency.DependencyObj;
 import model.GraphDraw;
 import model.GraphDraw.EdgeSettings;
+import model.dependency.Difference;
 import model.export.XMLCreator;
 
 import org.eclipse.jgit.lib.ObjectId;
@@ -115,6 +116,8 @@ public class Controller {
                 List<DependencyObj> dependencyObjs = loadDependency.getDependencies(selectedDir.getAbsolutePath());
 
                 String version = ControllerFunctions.getHashFromRepository(selectedDir.getAbsolutePath());
+                List<Difference> diffFromCommits = ControllerFunctions.getDiffFromCommits(selectedDir.getAbsolutePath());
+                dependencyObjs = ControllerFunctions.addModifiers(dependencyObjs, diffFromCommits);
                 DefaultDirectedWeightedGraph<DependencyObj, EdgeSettings> g1 = graphDraw.getGraphForDependencies(dependencyObjs);
                 ControllerFunctions.saveGraphImage(fileName, g1, version);
                 File imageFile1 = new File(System.getProperty("user.dir").toString() + "/src/main/resources/" + fileName + ".png");
