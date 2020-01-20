@@ -4,7 +4,7 @@ public class ModuleDependency extends DependencyObj {
 
     public ModuleDependency(String name) {
         super(name);
-        this.edgeStyle = "fillColor=blue";
+        this.edgeStyle = "fillColor=yellow";
     }
 
 }

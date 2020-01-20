@@ -111,13 +111,16 @@ public class Controller {
     private void makeDependencies(LoadDependency loadDependency, String fileName, String viewingInfoText) {
         ControllerFunctions.setDefaultDirector(directoryChooser);
         File selectedDir = directoryChooser.showDialog(onCreatedStage);
+        viewingInfo.setText("Loading...");
         if (selectedDir != null) {
             CompletableFuture.supplyAsync(()-> {
                 List<DependencyObj> dependencyObjs = loadDependency.getDependencies(selectedDir.getAbsolutePath());
 
                 String version = ControllerFunctions.getHashFromRepository(selectedDir.getAbsolutePath());
-                List<Difference> diffFromCommits = ControllerFunctions.getDiffFromCommits(selectedDir.getAbsolutePath());
-                dependencyObjs = ControllerFunctions.addModifiers(dependencyObjs, diffFromCommits);
+                if(!version.equals("unknown")) {
+                    List<Difference> diffFromCommits = ControllerFunctions.getDiffFromCommits(selectedDir.getAbsolutePath());
+                    dependencyObjs = ControllerFunctions.addModifiers(dependencyObjs, diffFromCommits);
+                }
                 DefaultDirectedWeightedGraph<DependencyObj, EdgeSettings> g1 = graphDraw.getGraphForDependencies(dependencyObjs);
                 ControllerFunctions.saveGraphImage(fileName, g1, version);
                 File imageFile1 = new File(System.getProperty("user.dir").toString() + "/src/main/resources/" + fileName + ".png");

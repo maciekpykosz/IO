@@ -322,7 +322,14 @@ public class ControllerFunctions {
         List<Difference> differences = new ArrayList<>();
         for (DiffEntry diffEntry : diffEntries) {
             String modifier = diffEntry.getChangeType().toString();
-            String[] filePath = diffEntry.getNewPath().split("/");
+
+            String[] filePath;
+            if(modifier.equals("DELETE")) {
+                filePath = diffEntry.getOldPath().split("/");
+            } else {
+                filePath = diffEntry.getNewPath().split("/");
+            }
+
             String[] fileName = filePath[filePath.length - 1].split("\\.");
             if (fileName[1].equals("java")) {
                 Difference difference = new Difference(modifier, fileName[0]);
