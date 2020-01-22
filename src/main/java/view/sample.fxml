@@ -18,9 +18,9 @@
                 <Menu fx:id="dependenciesMenu" mnemonicParsing="false" text="Dependencies">
                     <items>
                         <MenuItem fx:id="fileDepMenu" mnemonicParsing="false" onAction="#loadFileDep" text="File" />
-                        <Menu mnemonicParsing="false" text="Method">
+                        <Menu mnemonicParsing="false" fx:id="methodDepMenu" text="Method">
                             <items>
-                                <MenuItem fx:id="methodDepMenu" mnemonicParsing="false" onAction="#loadMethodDep" text="Method" />
+                                <MenuItem fx:id="methodDep" mnemonicParsing="false" onAction="#loadMethodDep" text="Method" />
                                 <Menu mnemonicParsing="false" text="Partition">
                                     <items>
                                         <MenuItem mnemonicParsing="false" text="2" onAction="#loadMethodPartitionDep"/>

@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ModuleDependencyTest {
     @Test
-    void shouldSetBlueColor(){
+    void shouldSetYellowColor(){
         ModuleDependency moduleDependency = new ModuleDependency("");
-        assertEquals(moduleDependency.getStyle(), "fillColor=blue");
+        assertEquals(moduleDependency.getStyle(), "fillColor=yellow");
     }
 
 }

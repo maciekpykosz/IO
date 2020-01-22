@@ -36,7 +36,7 @@ import java.security.Key;
 @ExtendWith(ApplicationExtension.class)
 class ControllerTest {
     private Controller controllerObj;
-    private static final String TEST_FOLDER_PATH = "TestIO";
+    private static final String TEST_FOLDER_PATH = "testProjectIO";
 
     @Start
     private void start(Stage primaryStage) {
@@ -105,6 +105,7 @@ class ControllerTest {
 
         robot.clickOn("#dependenciesMenu");
         robot.clickOn("#methodDepMenu");
+        robot.clickOn("#methodDep");
         ControllerTest.pasteTextByClipboard(robot, ControllerTest.TEST_FOLDER_PATH);
 
         robot.type(KeyCode.ENTER);
@@ -114,6 +115,8 @@ class ControllerTest {
         while(controllerObj.getImage() == null) {
             robot.sleep(1000);
         }
+
+        robot.type(KeyCode.ENTER);
     }
 
     @Test
@@ -131,6 +134,7 @@ class ControllerTest {
         while(controllerObj.getImage() == null) {
             robot.sleep(1000);
         }
+        robot.type(KeyCode.ENTER);
     }
 
     @Test
@@ -148,6 +152,8 @@ class ControllerTest {
         while(controllerObj.getImage() == null) {
             robot.sleep(1000);
         }
+
+        robot.type(KeyCode.ENTER);
     }
 
     @Test
@@ -172,6 +178,8 @@ class ControllerTest {
         while(controllerObj.getImage() == null) {
             robot.sleep(1000);
         }
+
+        robot.type(KeyCode.ENTER);
     }
 
     @Test
@@ -259,6 +267,11 @@ class ControllerTest {
         robot.moveTo(imageView).press(MouseButton.PRIMARY).moveBy(-100,10).release(MouseButton.PRIMARY);
         Assertions.assertTrue(imageView.getGraphicsContext2D().getTransform().getTx() < 1);
         Assertions.assertTrue(imageView.getGraphicsContext2D().getTransform().getTy() > 0);
+    }
+
+    @AfterAll
+    static void closeApp() {
+        Platform.exit();
     }
 
     public static void pasteTextByClipboard(FxRobot robot, String text) {

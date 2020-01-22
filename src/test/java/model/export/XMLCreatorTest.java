@@ -58,7 +58,7 @@ class XMLCreatorTest {
 
         assertNotNull(creator);
 
-        File selectedDir = new File(System.getProperty("user.dir").toString() + "/src/test/lab09fx");
+        File selectedDir = new File(System.getProperty("user.dir") + "/src/test/testProject");
         String absolutePath = selectedDir.getAbsolutePath();
         DependencyFinder dependencyFinder = new DependencyFinder();
         List<DependencyObj> filesDependencies = dependencyFinder.getMethodsDependencies(absolutePath);

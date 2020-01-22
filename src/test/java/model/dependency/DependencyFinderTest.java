@@ -10,7 +10,7 @@ import model.GraphDraw;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DependencyFinderTest {
-    private static final String TEST_FOLDER_PATH = System.getProperty("user.dir");
+    private static final String TEST_FOLDER_PATH = System.getProperty("user.dir") + "testProjectIO";
     private DependencyFinder dependencyFinder = new DependencyFinder();
     private List<DependencyObj> methodDependencies = dependencyFinder.getMethodsDependencies(TEST_FOLDER_PATH);
     private List<DependencyObj> fileDependencies = dependencyFinder.getFilesDependencies(TEST_FOLDER_PATH);
